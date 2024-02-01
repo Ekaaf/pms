@@ -12,21 +12,21 @@
     <link rel="shortcut icon" href="{{URL::to('assets/images/favicon.ico')}}">
 
     <!--Swiper slider css-->
-    <link href="{{URL::to('assets/libs/swiper/swiper-bundle.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('assets/libs/swiper/swiper-bundle.min.css')}}}" rel="stylesheet" type="text/css" />
 
     <!-- jsvectormap css -->
-    <link href="{{URL::to('assets/libs/jsvectormap/css/jsvectormap.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('assets/libs/jsvectormap/css/jsvectormap.min.css')}}" rel="stylesheet" type="text/css" />
 
     <!-- Layout config Js -->
-    <script src="{{URL::to('assets/js/layout.js')}}"></script>
+    <script src="{{asset('assets/js/layout.js')}}"></script>
     <!-- Bootstrap Css -->
-    <link href="{{URL::to('assets/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('assets/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
     <!-- Icons Css -->
-    <link href="{{URL::to('assets/css/icons.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('assets/css/icons.min.css')}}" rel="stylesheet" type="text/css" />
     <!-- App Css-->
-    <link href="{{URL::to('assets/css/app.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('assets/css/app.min.css')}}" rel="stylesheet" type="text/css" />
     <!-- custom Css-->
-    <link href="{{URL::to('assets/css/custom.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('assets/css/custom.min.css')}}" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -50,32 +50,34 @@
     <button onclick="topFunction()" class="btn btn-danger btn-icon" id="back-to-top" style="display: block;">
         <i class="ri-arrow-up-line"></i>
     </button>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- JAVASCRIPT -->
-    <script src="{{URL::to('assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-    <script src="{{URL::to('assets/libs/simplebar/simplebar.min.js')}}"></script>
-    <script src="{{URL::to('assets/libs/node-waves/waves.min.js')}}"></script>
-    <script src="{{URL::to('assets/libs/feather-icons/feather.min.js')}}"></script>
-    <script src="{{URL::to('assets/js/pages/plugins/lord-icon-2.1.0.js')}}"></script>
-    <script src="{{URL::to('assets/js/plugins.js')}}"></script>
+    <script src="{{asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{asset('assets/libs/simplebar/simplebar.min.js')}}"></script>
+    <script src="{{asset('assets/libs/node-waves/waves.min.js')}}"></script>
+    <script src="{{asset('assets/libs/feather-icons/feather.min.js')}}"></script>
+    <script src="{{asset('assets/js/pages/plugins/lord-icon-2.1.0.js')}}"></script>
+    <script src="{{asset('assets/js/plugins.js')}}"></script>
 
     <!-- apexcharts -->
-    <script src="{{URL::to('assets/libs/apexcharts/apexcharts.min.js')}}"></script>
+    <script src="{{asset('assets/libs/apexcharts/apexcharts.min.js')}}"></script>
 
     <!--Swiper slider js-->
-    <script src="{{URL::to('assets/libs/swiper/swiper-bundle.min.js')}}"></script>
+    <script src="{{asset('assets/libs/swiper/swiper-bundle.min.js')}}"></script>
 
     <!-- Vector map-->
-    <script src="{{URL::to('assets/libs/jsvectormap/js/jsvectormap.min.js')}}"></script>
-    <script src="{{URL::to('assets/libs/jsvectormap/maps/world-merc.js')}}"></script>
+    <script src="{{asset('assets/libs/jsvectormap/js/jsvectormap.min.js')}}"></script>
+    <script src="{{asset('assets/libs/jsvectormap/maps/world-merc.js')}}"></script>
 
     <!-- Countdown js -->
-    <script src="{{URL::to('assets/js/pages/coming-soon.init.js')}}"></script>
+    <script src="{{asset('assets/js/pages/coming-soon.init.js')}}"></script>
 
     <!-- Marketplace init -->
-    <script src="{{URL::to('assets/js/pages/dashboard-nft.init.js')}}"></script>
+    <script src="{{asset('assets/js/pages/dashboard-nft.init.js')}}"></script>
 
     <!-- App js -->
-    <script src="{{URL::to('assets/js/app.js')}}"></script>
+    <script src="{{asset('assets/js/app.js')}}"></script>
+    @yield('script')
 </body>
 
 </html>

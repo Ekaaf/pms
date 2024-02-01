@@ -1083,4 +1083,6 @@
 @endsection
 
 @section('script')
+<!-- password-addon init -->
+    <script src="assets/js/pages/password-addon.init.js"></script>
 @endsection
