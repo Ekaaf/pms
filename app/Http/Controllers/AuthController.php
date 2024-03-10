@@ -32,7 +32,7 @@ class AuthController extends Controller
     }
 
 
-    public function postlogin(Request $request): RedirectResponse
+    public function postLogin(Request $request): RedirectResponse
     {   
         $email = $request->input('email');
         $password = $request->input('password');

@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="{{URL::to('assets/images/favicon.ico')}}">
 
     <!--Swiper slider css-->
-    <link href="{{asset('assets/libs/swiper/swiper-bundle.min.css')}}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('assets/libs/swiper/swiper-bundle.min.css')}}" rel="stylesheet" type="text/css" />
 
     <!-- jsvectormap css -->
     <link href="{{asset('assets/libs/jsvectormap/css/jsvectormap.min.css')}}" rel="stylesheet" type="text/css" />
@@ -62,6 +62,14 @@
     </button>
     @yield('modal')
 
+    <script>
+        if(window.location.host == 'localhost'){
+            var baseUrl = 'http://localhost/pms/public/';
+        }
+        else{
+            var baseUrl = 'https://'+window.location.host+'/public/'
+        }
+    </script>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- JAVASCRIPT -->

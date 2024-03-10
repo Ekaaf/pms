@@ -11,8 +11,8 @@ $(document).ready(function() {
             email: "validateEmail",
             mobile: {
                 required: true,
-                minlength: 9,
-                maxlength: 9,
+                minlength: 11,
+                maxlength: 11,
             },
             password: {
                 required: true,

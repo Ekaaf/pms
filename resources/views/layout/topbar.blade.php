@@ -6,19 +6,19 @@
                 <div class="navbar-brand-box horizontal-logo">
                     <a href="index.html" class="logo logo-dark">
                         <span class="logo-sm">
-                            <img src="assets/images/logo-sm.png" alt="" height="22">
+                            <img src="{{URL::to('assets/images/logo-sm.png')}}" alt="" height="22">
                         </span>
                         <span class="logo-lg">
-                            <img src="assets/images/logo-dark.png" alt="" height="17">
+                            <img src="{{URL::to('assets/images/logo-dark.png')}}" alt="" height="17">
                         </span>
                     </a>
 
                     <a href="index.html" class="logo logo-light">
                         <span class="logo-sm">
-                            <img src="assets/images/logo-sm.png" alt="" height="22">
+                            <img src="{{URL::to('assets/images/logo-sm.png')}}" alt="" height="22">
                         </span>
                         <span class="logo-lg">
-                            <img src="assets/images/logo-light.png" alt="" height="17">
+                            <img src="{{URL::to('assets/images/logo-light.png')}}" alt="" height="17">
                         </span>
                     </a>
                 </div>
@@ -81,7 +81,7 @@
                                 <!-- item -->
                                 <a href="javascript:void(0);" class="dropdown-item notify-item py-2">
                                     <div class="d-flex">
-                                        <img src="assets/images/users/avatar-2.jpg" class="me-3 rounded-circle avatar-xs" alt="user-pic">
+                                        <img src="{{URL::to('assets/images/users/avatar-2.jpg')}}" class="me-3 rounded-circle avatar-xs" alt="user-pic">
                                         <div class="flex-grow-1">
                                             <h6 class="m-0">Angela Bernier</h6>
                                             <span class="fs-11 mb-0 text-muted">Manager</span>
@@ -91,7 +91,7 @@
                                 <!-- item -->
                                 <a href="javascript:void(0);" class="dropdown-item notify-item py-2">
                                     <div class="d-flex">
-                                        <img src="assets/images/users/avatar-3.jpg" class="me-3 rounded-circle avatar-xs" alt="user-pic">
+                                        <img src="{{URL::to('assets/images/users/avatar-3.jpg')}}" class="me-3 rounded-circle avatar-xs" alt="user-pic">
                                         <div class="flex-grow-1">
                                             <h6 class="m-0">David Grasso</h6>
                                             <span class="fs-11 mb-0 text-muted">Web Designer</span>
@@ -101,7 +101,7 @@
                                 <!-- item -->
                                 <a href="javascript:void(0);" class="dropdown-item notify-item py-2">
                                     <div class="d-flex">
-                                        <img src="assets/images/users/avatar-5.jpg" class="me-3 rounded-circle avatar-xs" alt="user-pic">
+                                        <img src="{{URL::to('assets/images/users/avatar-5.jpg')}}" class="me-3 rounded-circle avatar-xs" alt="user-pic">
                                         <div class="flex-grow-1">
                                             <h6 class="m-0">Mike Bunch</h6>
                                             <span class="fs-11 mb-0 text-muted">React Developer</span>
@@ -166,7 +166,7 @@
                                 </div>
                                 <div class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2">
                                     <div class="d-flex align-items-center">
-                                        <img src="assets/images/products/img-1.png" class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic">
+                                        <img src="{{URL::to('images/demo.jpg')}}" class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic">
                                         <div class="flex-grow-1">
                                             <h6 class="mt-0 mb-1 fs-14">
                                                 <a href="apps-ecommerce-product-details.html" class="text-reset">Branded
@@ -185,87 +185,6 @@
                                     </div>
                                 </div>
 
-                                <div class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2">
-                                    <div class="d-flex align-items-center">
-                                        <img src="assets/images/products/img-2.png" class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic">
-                                        <div class="flex-grow-1">
-                                            <h6 class="mt-0 mb-1 fs-14">
-                                                <a href="apps-ecommerce-product-details.html" class="text-reset">Bentwood Chair</a>
-                                            </h6>
-                                            <p class="mb-0 fs-12 text-muted">
-                                                Quantity: <span>5 x $18</span>
-                                            </p>
-                                        </div>
-                                        <div class="px-2">
-                                            <h5 class="m-0 fw-normal">$<span class="cart-item-price">89</span></h5>
-                                        </div>
-                                        <div class="ps-2">
-                                            <button type="button" class="btn btn-icon btn-sm btn-ghost-secondary remove-item-btn"><i class="ri-close-fill fs-16"></i></button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2">
-                                    <div class="d-flex align-items-center">
-                                        <img src="assets/images/products/img-3.png" class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic">
-                                        <div class="flex-grow-1">
-                                            <h6 class="mt-0 mb-1 fs-14">
-                                                <a href="apps-ecommerce-product-details.html" class="text-reset">
-                                                    Borosil Paper Cup</a>
-                                            </h6>
-                                            <p class="mb-0 fs-12 text-muted">
-                                                Quantity: <span>3 x $250</span>
-                                            </p>
-                                        </div>
-                                        <div class="px-2">
-                                            <h5 class="m-0 fw-normal">$<span class="cart-item-price">750</span></h5>
-                                        </div>
-                                        <div class="ps-2">
-                                            <button type="button" class="btn btn-icon btn-sm btn-ghost-secondary remove-item-btn"><i class="ri-close-fill fs-16"></i></button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2">
-                                    <div class="d-flex align-items-center">
-                                        <img src="assets/images/products/img-6.png" class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic">
-                                        <div class="flex-grow-1">
-                                            <h6 class="mt-0 mb-1 fs-14">
-                                                <a href="apps-ecommerce-product-details.html" class="text-reset">Gray
-                                                    Styled T-Shirt</a>
-                                            </h6>
-                                            <p class="mb-0 fs-12 text-muted">
-                                                Quantity: <span>1 x $1250</span>
-                                            </p>
-                                        </div>
-                                        <div class="px-2">
-                                            <h5 class="m-0 fw-normal">$ <span class="cart-item-price">1250</span></h5>
-                                        </div>
-                                        <div class="ps-2">
-                                            <button type="button" class="btn btn-icon btn-sm btn-ghost-secondary remove-item-btn"><i class="ri-close-fill fs-16"></i></button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2">
-                                    <div class="d-flex align-items-center">
-                                        <img src="assets/images/products/img-5.png" class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic">
-                                        <div class="flex-grow-1">
-                                            <h6 class="mt-0 mb-1 fs-14">
-                                                <a href="apps-ecommerce-product-details.html" class="text-reset">Stillbird Helmet</a>
-                                            </h6>
-                                            <p class="mb-0 fs-12 text-muted">
-                                                Quantity: <span>2 x $495</span>
-                                            </p>
-                                        </div>
-                                        <div class="px-2">
-                                            <h5 class="m-0 fw-normal">$<span class="cart-item-price">990</span></h5>
-                                        </div>
-                                        <div class="ps-2">
-                                            <button type="button" class="btn btn-icon btn-sm btn-ghost-secondary remove-item-btn"><i class="ri-close-fill fs-16"></i></button>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         <div class="p-3 border-bottom-0 border-start-0 border-end-0 border-dashed border" id="checkout-elem">
@@ -366,78 +285,6 @@
                                         </div>
                                     </div>
 
-                                    <div class="text-reset notification-item d-block dropdown-item position-relative">
-                                        <div class="d-flex">
-                                            <img src="assets/images/users/avatar-2.jpg" class="me-3 rounded-circle avatar-xs flex-shrink-0" alt="user-pic">
-                                            <div class="flex-grow-1">
-                                                <a href="#!" class="stretched-link">
-                                                    <h6 class="mt-0 mb-1 fs-13 fw-semibold">Angela Bernier</h6>
-                                                </a>
-                                                <div class="fs-13 text-muted">
-                                                    <p class="mb-1">Answered to your comment on the cash flow forecast's
-                                                        graph 🔔.</p>
-                                                </div>
-                                                <p class="mb-0 fs-11 fw-medium text-uppercase text-muted">
-                                                    <span><i class="mdi mdi-clock-outline"></i> 48 min ago</span>
-                                                </p>
-                                            </div>
-                                            <div class="px-2 fs-15">
-                                                <div class="form-check notification-check">
-                                                    <input class="form-check-input" type="checkbox" value="" id="all-notification-check02">
-                                                    <label class="form-check-label" for="all-notification-check02"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="text-reset notification-item d-block dropdown-item position-relative">
-                                        <div class="d-flex">
-                                            <div class="avatar-xs me-3 flex-shrink-0">
-                                                <span class="avatar-title bg-danger-subtle text-danger rounded-circle fs-16">
-                                                    <i class='bx bx-message-square-dots'></i>
-                                                </span>
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <a href="#!" class="stretched-link">
-                                                    <h6 class="mt-0 mb-2 fs-13 lh-base">You have received <b class="text-success">20</b> new messages in the conversation
-                                                    </h6>
-                                                </a>
-                                                <p class="mb-0 fs-11 fw-medium text-uppercase text-muted">
-                                                    <span><i class="mdi mdi-clock-outline"></i> 2 hrs ago</span>
-                                                </p>
-                                            </div>
-                                            <div class="px-2 fs-15">
-                                                <div class="form-check notification-check">
-                                                    <input class="form-check-input" type="checkbox" value="" id="all-notification-check03">
-                                                    <label class="form-check-label" for="all-notification-check03"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="text-reset notification-item d-block dropdown-item position-relative">
-                                        <div class="d-flex">
-                                            <img src="assets/images/users/avatar-8.jpg" class="me-3 rounded-circle avatar-xs flex-shrink-0" alt="user-pic">
-                                            <div class="flex-grow-1">
-                                                <a href="#!" class="stretched-link">
-                                                    <h6 class="mt-0 mb-1 fs-13 fw-semibold">Maureen Gibson</h6>
-                                                </a>
-                                                <div class="fs-13 text-muted">
-                                                    <p class="mb-1">We talked about a project on linkedin.</p>
-                                                </div>
-                                                <p class="mb-0 fs-11 fw-medium text-uppercase text-muted">
-                                                    <span><i class="mdi mdi-clock-outline"></i> 4 hrs ago</span>
-                                                </p>
-                                            </div>
-                                            <div class="px-2 fs-15">
-                                                <div class="form-check notification-check">
-                                                    <input class="form-check-input" type="checkbox" value="" id="all-notification-check04">
-                                                    <label class="form-check-label" for="all-notification-check04"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
                                     <div class="my-3 text-center view-all">
                                         <button type="button" class="btn btn-soft-success waves-effect waves-light">View
                                             All Notifications <i class="ri-arrow-right-line align-middle"></i></button>
@@ -450,7 +297,7 @@
                                 <div data-simplebar style="max-height: 300px;" class="pe-2">
                                     <div class="text-reset notification-item d-block dropdown-item">
                                         <div class="d-flex">
-                                            <img src="assets/images/users/avatar-3.jpg" class="me-3 rounded-circle avatar-xs" alt="user-pic">
+                                            <img src="{{URL::to('images/demo.jpg')}}" class="me-3 rounded-circle avatar-xs" alt="user-pic">
                                             <div class="flex-grow-1">
                                                 <a href="#!" class="stretched-link">
                                                     <h6 class="mt-0 mb-1 fs-13 fw-semibold">James Lemire</h6>
@@ -466,77 +313,6 @@
                                                 <div class="form-check notification-check">
                                                     <input class="form-check-input" type="checkbox" value="" id="messages-notification-check01">
                                                     <label class="form-check-label" for="messages-notification-check01"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="text-reset notification-item d-block dropdown-item">
-                                        <div class="d-flex">
-                                            <img src="assets/images/users/avatar-2.jpg" class="me-3 rounded-circle avatar-xs" alt="user-pic">
-                                            <div class="flex-grow-1">
-                                                <a href="#!" class="stretched-link">
-                                                    <h6 class="mt-0 mb-1 fs-13 fw-semibold">Angela Bernier</h6>
-                                                </a>
-                                                <div class="fs-13 text-muted">
-                                                    <p class="mb-1">Answered to your comment on the cash flow forecast's
-                                                        graph 🔔.</p>
-                                                </div>
-                                                <p class="mb-0 fs-11 fw-medium text-uppercase text-muted">
-                                                    <span><i class="mdi mdi-clock-outline"></i> 2 hrs ago</span>
-                                                </p>
-                                            </div>
-                                            <div class="px-2 fs-15">
-                                                <div class="form-check notification-check">
-                                                    <input class="form-check-input" type="checkbox" value="" id="messages-notification-check02">
-                                                    <label class="form-check-label" for="messages-notification-check02"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="text-reset notification-item d-block dropdown-item">
-                                        <div class="d-flex">
-                                            <img src="assets/images/users/avatar-6.jpg" class="me-3 rounded-circle avatar-xs" alt="user-pic">
-                                            <div class="flex-grow-1">
-                                                <a href="#!" class="stretched-link">
-                                                    <h6 class="mt-0 mb-1 fs-13 fw-semibold">Kenneth Brown</h6>
-                                                </a>
-                                                <div class="fs-13 text-muted">
-                                                    <p class="mb-1">Mentionned you in his comment on 📃 invoice #12501.
-                                                    </p>
-                                                </div>
-                                                <p class="mb-0 fs-11 fw-medium text-uppercase text-muted">
-                                                    <span><i class="mdi mdi-clock-outline"></i> 10 hrs ago</span>
-                                                </p>
-                                            </div>
-                                            <div class="px-2 fs-15">
-                                                <div class="form-check notification-check">
-                                                    <input class="form-check-input" type="checkbox" value="" id="messages-notification-check03">
-                                                    <label class="form-check-label" for="messages-notification-check03"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="text-reset notification-item d-block dropdown-item">
-                                        <div class="d-flex">
-                                            <img src="assets/images/users/avatar-8.jpg" class="me-3 rounded-circle avatar-xs" alt="user-pic">
-                                            <div class="flex-grow-1">
-                                                <a href="#!" class="stretched-link">
-                                                    <h6 class="mt-0 mb-1 fs-13 fw-semibold">Maureen Gibson</h6>
-                                                </a>
-                                                <div class="fs-13 text-muted">
-                                                    <p class="mb-1">We talked about a project on linkedin.</p>
-                                                </div>
-                                                <p class="mb-0 fs-11 fw-medium text-uppercase text-muted">
-                                                    <span><i class="mdi mdi-clock-outline"></i> 3 days ago</span>
-                                                </p>
-                                            </div>
-                                            <div class="px-2 fs-15">
-                                                <div class="form-check notification-check">
-                                                    <input class="form-check-input" type="checkbox" value="" id="messages-notification-check04">
-                                                    <label class="form-check-label" for="messages-notification-check04"></label>
                                                 </div>
                                             </div>
                                         </div>

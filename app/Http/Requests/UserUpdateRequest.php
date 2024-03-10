@@ -25,25 +25,22 @@ class UserUpdateRequest extends FormRequest
     public function rules()
     {   
         return [
-            'name' => 'required',
-            'username' => 'required|unique:users,username,'.$this->id,
-            'role_id' => 'required',
-            'department' => 'required',
             'email' => 'required|email|unique:users,email,'.$this->id,
-            'emp_id' => 'required|unique:users,emp_id,'.$this->id
+            'role_id' => 'required',
+            'mobile' => 'required|unique:users,mobile,'.$this->id
         ];
     }
 
-    public function messages(){
-        return [
-            'name.required' => 'Please enter full name',
-            'username.required' => 'Please enter username',
-            'username.unique' => 'Username must be unique',
-            'role_id.required' => 'Please select role',
-            'department.required' => 'Please select department',
-            'email.required' => 'Please enter a valid email address',
-            'email.email' => 'Please enter a valid email address',
-            'emp_id.required' => 'Please enter 9 digit employee ID'
-        ];
-    }
+    // public function messages(){
+    //     return [
+    //         'name.required' => 'Please enter full name',
+    //         'username.required' => 'Please enter username',
+    //         'username.unique' => 'Username must be unique',
+    //         'role_id.required' => 'Please select role',
+    //         'department.required' => 'Please select department',
+    //         'email.required' => 'Please enter a valid email address',
+    //         'email.email' => 'Please enter a valid email address',
+    //         'emp_id.required' => 'Please enter 9 digit employee ID'
+    //     ];
+    // }
 }

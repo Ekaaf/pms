@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MenusController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\RoomCategoriesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,8 +45,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
 	// roles
 	Route::get('/roles',[RolesController::class, 'rolesList'])->name('Pms.RolesList');
 	Route::post('/roles/save-role',[RolesController::class, 'saveRole'])->name('Pms.AddRole');
-	Route::post('/roles/edit-role/{id}',[RolesController::class, 'editRole'])->name('Pms.EditRole');
-	Route::post('/roles/update-role/{id}',[RolesController::class, 'updateRole'])->name('Pms.UpdateRole');
+	Route::post('/roles/edit-role/{id}',[RolesController::class, 'editRole'])->name('Pms.EditRole.View');
+	Route::post('/roles/edit-role/{id}',[RolesController::class, 'updateRole'])->name('Pms.EditRole');
 	Route::post('/roles/delete-role',[RolesController::class, 'deleteRole'])->name('Pms.DeleteRole');
 
 	// UAC
@@ -66,4 +67,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
 	Route::post('/users/delete/{id}',[UsersController::class, 'userDelete'])->name('Pms.UserDelete');
 	Route::get('/users',[UsersController::class, 'userList'])->name('Pms.UserList.View');
 	Route::post('/users',[UsersController::class, 'getAllUsers'])->name('Pms.UserList');
+
+
+
+	// Room Category
+	Route::get('/room-category/add',[RoomCategoriesController::class, 'roomCategoryAdd'])->name('Pms.RoomCategoryAdd.View');
+	Route::post('/room-category/add',[RoomCategoriesController::class, 'roomCategorySave'])->name('Pms.RoomCategoryAdd');
+	Route::get('/room-category/edit/{id}',[RoomCategoriesController::class, 'roomCategoryEdit'])->name('Pms.RoomCategoryEdit.View');
+	Route::post('/room-category/edit/{id}',[RoomCategoriesController::class, 'roomCategoryUpdate'])->name('Pms.RoomCategoryEdit');
+	Route::post('/room-category/delete/{id}',[RoomCategoriesController::class, 'roomCategoryDelete'])->name('Pms.RoomCategoryDelete');
+	Route::get('/room-category',[RoomCategoriesController::class, 'roomCategoryList'])->name('Pms.RoomCategoryList.View');
+	Route::post('/room-category',[RoomCategoriesController::class, 'getAllroomCategories'])->name('Pms.RoomCategoryList');
 });

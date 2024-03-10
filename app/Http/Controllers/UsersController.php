@@ -70,9 +70,9 @@ class UsersController extends Controller
     }
 
     public function userSave(UserAddRequest $request){
-        if($request->username != $request->emp_id){
-            return redirect()->back()->with('error', "Username and Employee ID must be same")->withInput();
-        }
+        // if($request->username != $request->emp_id){
+        //     return redirect()->back()->with('error', "Username and Employee ID must be same")->withInput();
+        // }
         $user = new User();
         $user->email = $request->email;
         $user->mobile = $request->mobile;
@@ -91,21 +91,14 @@ class UsersController extends Controller
     public function userEdit(Request $request, $id){
         $user = User::where('id',$id)->first();
         $roles = Role::all();
-        $departments = getEmployeeDept();
-        return view('users.user_edit')->with('roles', $roles)->with('user', $user)->with('departments', $departments);
+        return view('users.user_edit')->with('roles', $roles)->with('user', $user);
     }
 
     public function userUpdate(UserUpdateRequest $request, $id){
-        if($request->username != $request->emp_id){
-            return redirect()->back()->with('error', "Username and Employee ID must be same")->withInput();
-        }
         $user = User::find($id);
-        $user->name = $request->name;
-        $user->username = $request->username;
-        $user->role_id = $request->role_id;
         $user->email = $request->email;
-        $user->emp_id = $request->emp_id;
-        $user->department = $request->department;
+        $user->mobile = $request->mobile;
+        $user->role_id = $request->role_id;
         $success = $user->save();
 
         
