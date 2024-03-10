@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <!-- App favicon -->
     <link rel="shortcut icon" href="assets/images/favicon.ico">
 
@@ -51,7 +52,7 @@
     <script src="{{asset('assets/libs/feather-icons/feather.min.js')}}"></script>
     <script src="{{asset('assets/js/pages/plugins/lord-icon-2.1.0.js')}}"></script>
     <script src="{{asset('assets/js/plugins.js')}}"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @yield('script')
     
 </body>

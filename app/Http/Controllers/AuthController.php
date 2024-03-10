@@ -52,10 +52,10 @@ class AuthController extends Controller
                         ->withInput();
         }
 
-        // $menuAccess = [];
+        $menuAccess = [];
         if (Auth::attempt(['email' => $email, 'password' => $password])) {
-            // $menuAccess = $this->setMenuAccess(Auth::user()->role_id);
-            // $request->session()->put('menuAccess', $menuAccess);
+            $menuAccess = $this->setMenuAccess(Auth::user()->role_id);
+            $request->session()->put('menuAccess', $menuAccess);
             return redirect()->intended('admin/dashboard');
         }
         else{

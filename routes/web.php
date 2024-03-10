@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MenusController;
+use App\Http\Controllers\RolesController;
+use App\Http\Controllers\UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,13 +23,47 @@ use App\Http\Controllers\AuthController;
 // });
 
 // auth routes
-Route::get('/login',[AuthController::class, 'login'])->name('Pms.login');
-Route::post('/post-login',[AuthController::class, 'postLogin'])->name('Pms.post-login');
-Route::get('/signup',[AuthController::class, 'signup'])->name('Pms.signup');
-Route::get('/forget-password',[AuthController::class, 'forgetPassword'])->name('Pms.forget-password');
-Route::get('/logout',[AuthController::class, 'logout'])->name('Pms.logout');
+Route::get('/login',[AuthController::class, 'login'])->name('Pms.Login');
+Route::post('/post-login',[AuthController::class, 'postLogin'])->name('Pms.PostLogin');
+Route::get('/signup',[AuthController::class, 'signup'])->name('Pms.Signup');
+Route::get('/forget-password',[AuthController::class, 'forgetPassword'])->name('Pms.ForgetPassword');
+Route::get('/logout',[AuthController::class, 'logout'])->name('Pms.Logout');
 // end auth routes
 
 Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
-	Route::get('/dashboard',[DashboardController::class, 'dashboard'])->name('Pms.dashboard');
+	Route::get('/dashboard',[DashboardController::class, 'dashboard'])->name('Pms.Dashboard');
+
+	// menus
+	Route::get('/menus',[MenusController::class, 'menusList'])->name('Pms.MenuList');
+	Route::get('/menus/menu-add',[MenusController::class, 'menuAdd'])->name('Pms.MenuAdd.View');
+	Route::post('/menus/menu-add',[MenusController::class, 'menuSave'])->name('Pms.MenuAdd');
+	Route::post('/menus/delete-menu',[MenusController::class, 'deleteMenu'])->name('Pms.MenuDelete');
+	Route::get('/menus/menu-edit/{id}',[MenusController::class, 'menuEdit'])->name('Pms.MenuEdit.View');
+	Route::post('/menus/menu-edit/{id}',[MenusController::class, 'menuUpdate'])->name('Pms.MenuEdit');
+
+	// roles
+	Route::get('/roles',[RolesController::class, 'rolesList'])->name('Pms.RolesList');
+	Route::post('/roles/save-role',[RolesController::class, 'saveRole'])->name('Pms.AddRole');
+	Route::post('/roles/edit-role/{id}',[RolesController::class, 'editRole'])->name('Pms.EditRole');
+	Route::post('/roles/update-role/{id}',[RolesController::class, 'updateRole'])->name('Pms.UpdateRole');
+	Route::post('/roles/delete-role',[RolesController::class, 'deleteRole'])->name('Pms.DeleteRole');
+
+	// UAC
+	Route::get('/users/change-password',[UsersController::class, 'changePassword'])->name('Pms.ChangePassword.View');
+	Route::post('/users/change-password',[UsersController::class, 'updatePassword'])->name('Pms.ChangePassword');
+	Route::get('/user-access/{id}',[MenusController::class, 'userAccess'])->name('Pms.UserAccess.View');
+	Route::post('/user-access/{id}',[MenusController::class, 'userAccessSave'])->name('Pms.UserAccess');
+
+	// change password
+	Route::get('/users/change-password/{id}',[UsersController::class, 'changePassword'])->name('Pms.ChangeUserPassword.View');
+	Route::post('/users/change-password/{id}',[UsersController::class, 'updatePassword'])->name('Pms.ChangeUserPassword');
+
+	// Users
+	Route::get('/users/add',[UsersController::class, 'userAdd'])->name('Pms.UserAdd.View');
+	Route::post('/users/add',[UsersController::class, 'userSave'])->name('Pms.UserAdd');
+	Route::get('/users/edit/{id}',[UsersController::class, 'userEdit'])->name('Pms.UserEdit.View');
+	Route::post('/users/edit/{id}',[UsersController::class, 'userUpdate'])->name('Pms.UserEdit');
+	Route::post('/users/delete/{id}',[UsersController::class, 'userDelete'])->name('Pms.UserDelete');
+	Route::get('/users',[UsersController::class, 'userList'])->name('Pms.UserList.View');
+	Route::post('/users',[UsersController::class, 'getAllUsers'])->name('Pms.UserList');
 });

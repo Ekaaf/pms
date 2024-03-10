@@ -1,0 +1,2 @@
+route      function   route_name   view
+menu-add    menuAdd	MenuAdd	    menu_add

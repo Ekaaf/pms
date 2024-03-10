@@ -1,5 +1,8 @@
 <!doctype html>
 <html lang="en" data-layout="vertical" data-topbar="dark" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none" data-bs-theme="galaxy" data-body-image="img-1" data-preloader="disable">
+<?php 
+    $createdMenu = createMenu();
+?>
 
 <head>
 
@@ -8,6 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{URL::to('assets/images/favicon.ico')}}">
 
@@ -27,6 +31,12 @@
     <link href="{{asset('assets/css/app.min.css')}}" rel="stylesheet" type="text/css" />
     <!-- custom Css-->
     <link href="{{asset('assets/css/custom.min.css')}}" rel="stylesheet" type="text/css" />
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css"/>
+
+    <link rel="stylesheet" href="//cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css"/>
 
 </head>
 
@@ -50,6 +60,9 @@
     <button onclick="topFunction()" class="btn btn-danger btn-icon" id="back-to-top" style="display: block;">
         <i class="ri-arrow-up-line"></i>
     </button>
+    @yield('modal')
+
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- JAVASCRIPT -->
     <script src="{{asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
@@ -75,8 +88,26 @@
     <!-- Marketplace init -->
     <script src="{{asset('assets/js/pages/dashboard-nft.init.js')}}"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/additional-methods.min.js"></script>
     <!-- App js -->
     <script src="{{asset('assets/js/app.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="//cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js"></script>
+    <script src="//cdn.datatables.net/buttons/1.2.4/js/buttons.flash.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.colVis.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.2.0/js/dataTables.select.min.js"></script>
+
     @yield('script')
 </body>
 
