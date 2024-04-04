@@ -157,3 +157,16 @@ function allowedRoutesForAll(){
     array_push($routes, 'admin/stop-acting-as-user');
     return $routes;
 }
+
+function numberOfBeds($value = ""){
+    $arr =[
+        '1' => '1 bed',
+        '2' => '2 bed'
+    ];
+    if($value !=''){
+        return $arr[$value];
+    }
+    else{
+        return $arr;
+    }
+}

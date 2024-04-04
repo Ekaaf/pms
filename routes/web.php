@@ -7,6 +7,7 @@ use App\Http\Controllers\MenusController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\RoomCategoriesController;
+use App\Http\Controllers\RoomsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,4 +79,22 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
 	Route::post('/room-category/delete/{id}',[RoomCategoriesController::class, 'roomCategoryDelete'])->name('Pms.RoomCategoryDelete');
 	Route::get('/room-category',[RoomCategoriesController::class, 'roomCategoryList'])->name('Pms.RoomCategoryList.View');
 	Route::post('/room-category',[RoomCategoriesController::class, 'getAllroomCategories'])->name('Pms.RoomCategoryList');
+	Route::get('/room-category/view/{id}',[RoomCategoriesController::class, 'roomCategoryView'])->name('Pms.RoomCategoryView');
+
+
+
+	// Room Category
+	Route::get('/rooms/add',[RoomsController::class, 'roomAdd'])->name('Pms.roomAdd.View');
+	Route::post('/rooms/add',[RoomsController::class, 'roomAddSave'])->name('Pms.roomAdd');
+	Route::get('/rooms',[RoomsController::class, 'roomsList'])->name('Pms.RoomList.View');
+	Route::post('/rooms',[RoomsController::class, 'getAllRoomS'])->name('Pms.RoomList');
+
+
+
+	Route::get('/room-category/edit/{id}',[RoomCategoriesController::class, 'roomCategoryEdit'])->name('Pms.RoomCategoryEdit.View');
+	Route::post('/room-category/edit/{id}',[RoomCategoriesController::class, 'roomCategoryUpdate'])->name('Pms.RoomCategoryEdit');
+	Route::post('/room-category/delete/{id}',[RoomCategoriesController::class, 'roomCategoryDelete'])->name('Pms.RoomCategoryDelete');
+	Route::get('/room-category',[RoomCategoriesController::class, 'roomCategoryList'])->name('Pms.RoomCategoryList.View');
+	Route::post('/room-category',[RoomCategoriesController::class, 'getAllroomCategories'])->name('Pms.RoomCategoryList');
+	Route::get('/room-category/view/{id}',[RoomCategoriesController::class, 'roomCategoryView'])->name('Pms.RoomCategoryView');
 });

@@ -7,7 +7,7 @@
 <head>
 
     <meta charset="utf-8" />
-    <title>NFT Dashboard | Velzon - Admin & Dashboard Template</title>
+    <title>PMS Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
@@ -29,7 +29,7 @@
     <link href="{{asset('assets/css/icons.min.css')}}" rel="stylesheet" type="text/css" />
     <!-- App Css-->
     <link href="{{asset('assets/css/app.min.css')}}" rel="stylesheet" type="text/css" />
-    <!-- custom Css-->
+    <!-- custom Css for theme-->
     <link href="{{asset('assets/css/custom.min.css')}}" rel="stylesheet" type="text/css" />
 
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -37,6 +37,8 @@
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css"/>
 
     <link rel="stylesheet" href="//cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css"/>
+    <!-- custom Css-->
+    <link href="{{asset('assets/custom/css/custom.css')}}" rel="stylesheet" type="text/css" />
 
 </head>
 
