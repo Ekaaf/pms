@@ -36,7 +36,7 @@
                                     <label for="nameInput" class="form-label">Room Category</label>
                                 </div>
                                 <div class="col-lg-10">
-                                    <input type="text" class="form-control" id="category" name="category" value="{{old('category') ?? $roomCategory->category}}" placeholder="Room Category">
+                                    <input type="text" class="form-control <?php if($errors->has('category')) echo 'element-border';?>" id="category" name="category" value="{{old('category') ?? $roomCategory->category}}" placeholder="Room Category">
                                     @if($errors->has('category'))
                                         <div class="input-error">{{ $errors->first('category') }}</div>
                                     @endif
@@ -50,7 +50,7 @@
                                     <label for="nameInput" class="form-label">Room Size</label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <input type="number" class="form-control" id="size" name="size" placeholder="Room Size" value="{{old('size') ?? $roomCategory->size}}">
+                                    <input type="number" class="form-control <?php if($errors->has('size')) echo 'element-border';?>" id="size" name="size" placeholder="Room Size" value="{{old('size') ?? $roomCategory->size}}">
                                     @if($errors->has('size'))
                                         <div class="input-error">{{ $errors->first('size') }}</div>
                                     @endif
@@ -67,7 +67,7 @@
                                     <label for="nameInput" class="form-label">Adult</label>
                                 </div>
                                 <div class="col-lg-10">
-                                    <input type="number" class="form-control" id="people_adult" name="people_adult" placeholder="Number of Adult People" value="{{old('people_adult') ?? $roomCategory->people_adult}}">
+                                    <input type="number" class="form-control <?php if($errors->has('people_adult')) echo 'element-border';?>" id="people_adult" name="people_adult" placeholder="Number of Adult People" value="{{old('people_adult') ?? $roomCategory->people_adult}}">
                                     @if($errors->has('people_adult'))
                                         <div class="input-error">{{ $errors->first('people_adult') }}</div>
                                     @endif
@@ -81,7 +81,7 @@
                                     <label for="nameInput" class="form-label">Child</label>
                                 </div>
                                 <div class="col-lg-10">
-                                    <input type="number" class="form-control" id="people_child" name="people_child" placeholder="Number of Child" value="{{old('people_child') ?? $roomCategory->people_child}}">
+                                    <input type="number" class="form-control <?php if($errors->has('people_child')) echo 'element-border';?>" id="people_child" name="people_child" placeholder="Number of Child" value="{{old('people_child') ?? $roomCategory->people_child}}">
                                     @if($errors->has('people_child'))
                                         <div class="input-error">{{ $errors->first('people_child') }}</div>
                                     @endif
@@ -95,7 +95,7 @@
                                     <label for="nameInput" class="form-label">Bed</label>
                                 </div>
                                 <div class="col-lg-10">
-                                    <select class="form-control" id="bed" name="bed">
+                                    <select class="form-control <?php if($errors->has('bed')) echo 'element-border';?>" id="bed" name="bed">
                                         <option value="">Select bed</option>
                                         @foreach($bedList as $key=>$value)
                                         <option value="{{$key}}" @if((old('bed')== $key) || $roomCategory->bed == $key) selected @endif>{{$value}}</option>
@@ -113,7 +113,7 @@
                                     <label for="nameInput" class="form-label">Price</label>
                                 </div>
                                 <div class="col-lg-10">
-                                    <input type="number" class="form-control" id="price" name="price" placeholder="Price" value="{{old('price') ?? $roomCategory->price}}">
+                                    <input type="number" class="form-control <?php if($errors->has('price')) echo 'element-border';?>" id="price" name="price" placeholder="Price" value="{{old('price') ?? $roomCategory->price}}">
                                     @if($errors->has('price'))
                                         <div class="input-error">{{ $errors->first('price') }}</div>
                                     @endif
@@ -123,10 +123,25 @@
 
                             <div class="row mb-3">
                                 <div class="col-lg-2">
+                                    <label for="nameInput" class="form-label">Discount</label>
+                                </div>
+                                <div class="col-lg-6">
+                                    <input type="number" class="form-control <?php if($errors->has('discount')) echo 'element-border';?>" id="discount" name="discount" placeholder="Discount" value="{{old('discount') ?? $roomCategory->discount}}">
+                                    @if($errors->has('discount'))
+                                        <div class="input-error">{{ $errors->first('discount') }}</div>
+                                    @endif
+                                </div>
+                                <div class="col-lg-4 d-flex align-items-center">
+                                    (Percentage)
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-lg-2">
                                     <label for="nameInput" class="form-label">Description</label>
                                 </div>
                                 <div class="col-lg-10">
-                                    <textarea class="form-control" id="description" name="description">{{old('description') ?? $roomCategory->description}}</textarea>
+                                    <textarea class="form-control <?php if($errors->has('description')) echo 'element-border';?>" id="description" name="description">{{old('description') ?? $roomCategory->description}}</textarea>
                                     @if($errors->has('description'))
                                         <div class="input-error">{{ $errors->first('description') }}</div>
                                     @endif
@@ -140,7 +155,7 @@
                                     <label for="nameInput" class="form-label">Package</label>
                                 </div>
                                 <div class="col-lg-10">
-                                    <textarea class="form-control" id="package" name="package">{{old('package') ?? $roomCategory->package}}</textarea>
+                                    <textarea class="form-control <?php if($errors->has('package')) echo 'element-border';?>" id="package" name="package">{{old('package') ?? $roomCategory->package}}</textarea>
                                     @if($errors->has('package'))
                                         <div class="input-error">{{ $errors->first('package') }}</div>
                                     @endif
@@ -154,7 +169,7 @@
                                     <label for="nameInput" class="form-label">Facilities</label>
                                 </div>
                                 <div class="col-lg-10">
-                                    <textarea class="form-control" id="facilities" name="facilities">{{old('facilities') ?? $roomCategory->facilities}}</textarea>
+                                    <textarea class="form-control <?php if($errors->has('facilities')) echo 'element-border';?>" id="facilities" name="facilities">{{old('facilities') ?? $roomCategory->facilities}}</textarea>
                                     @if($errors->has('facilities'))
                                         <div class="input-error">{{ $errors->first('facilities') }}</div>
                                     @endif
@@ -168,7 +183,7 @@
                                     <label for="nameInput" class="form-label">Check In Time</label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <input type="text" class="form-control" id="check_in" name="check_in" placeholder="Check In Time" value="{{old('check_in') ?? $roomCategory->check_in}}">
+                                    <input type="text" class="form-control <?php if($errors->has('check_in')) echo 'element-border';?>" id="check_in" name="check_in" placeholder="Check In Time" value="{{old('check_in') ?? $roomCategory->check_in}}">
                                     @if($errors->has('check_in'))
                                         <div class="input-error">{{ $errors->first('check_in') }}</div>
                                     @endif
@@ -181,7 +196,7 @@
                                     <label for="nameInput" class="form-label">Check Out Time</label>
                                 </div>
                                 <div class="col-lg-10">
-                                    <input type="text" class="form-control" id="check_out" name="check_out" placeholder="Check Out Time" value="{{old('check_out') ?? $roomCategory->check_out}}">
+                                    <input type="text" class="form-control <?php if($errors->has('check_out')) echo 'element-border';?>" id="check_out" name="check_out" placeholder="Check Out Time" value="{{old('check_out') ?? $roomCategory->check_out}}">
                                     @if($errors->has('check_out'))
                                         <div class="input-error">{{ $errors->first('check_out') }}</div>
                                     @endif
@@ -194,7 +209,7 @@
                                     <label for="nameInput" class="form-label">Check In Instructions</label>
                                 </div>
                                 <div class="col-lg-10">
-                                    <textarea class="form-control" id="check_in_instruction" name="check_in_instruction" placeholder="Check In Instructions">
+                                    <textarea class="form-control <?php if($errors->has('check_in_instruction')) echo 'element-border';?>" id="check_in_instruction" name="check_in_instruction" placeholder="Check In Instructions">
                                         {{old('check_in_instruction') ?? $roomCategory->check_in_instruction}}
                                     </textarea>
                                     @if($errors->has('check_in_instruction'))
@@ -209,7 +224,7 @@
                                     <label for="nameInput" class="form-label">Cancellation Policy</label>
                                 </div>
                                 <div class="col-lg-10">
-                                    <textarea class="form-control" id="cancellation_policy" name="cancellation_policy" placeholder="Cancellation Policy">
+                                    <textarea class="form-control <?php if($errors->has('cancellation_policy')) echo 'element-border';?>" id="cancellation_policy" name="cancellation_policy" placeholder="Cancellation Policy">
                                         {{old('cancellation_policy') ?? $roomCategory->cancellation_policy}}
                                     </textarea>
                                     @if($errors->has('cancellation_policy'))
@@ -218,7 +233,7 @@
                                 </div>
                             </div>
                             
-                            @if(checkButtonAccess('admin/room-category/update/{$roomCategory->id}'))
+                            @if(checkButtonAccess('admin/room-category/edit/{$roomCategory->id}'))
                             <div class="text-end">
                                 <button type="submit" class="btn btn-primary">Update Category</button>
                             </div>

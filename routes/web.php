@@ -82,10 +82,21 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
 	Route::get('/room-category/view/{id}',[RoomCategoriesController::class, 'roomCategoryView'])->name('Pms.RoomCategoryView');
 
 
+	// Rent of Room Category
+	Route::get('/room-category-rent/add',[RoomCategoriesController::class, 'roomCategoryRentAdd'])->name('Pms.RoomCategoryRentAdd.View');
+	Route::post('/room-category-rent/add',[RoomCategoriesController::class, 'roomCategoryRentSave'])->name('Pms.RoomCategoryRentAdd');
+	Route::get('/room-category-rent/edit/{id}',[RoomCategoriesController::class, 'roomCategoryRentEdit'])->name('Pms.RoomCategoryRentEdit.View');
+	Route::post('/room-category-rent/edit/{id}',[RoomCategoriesController::class, 'roomCategoryRentUpdate'])->name('Pms.RoomCategoryRentEdit');
+	Route::post('/room-category-rent/delete/{id}',[RoomCategoriesController::class, 'roomCategoryRentDelete'])->name('Pms.RoomCategoryRentDelete');
+	Route::get('/room-category-rent',[RoomCategoriesController::class, 'roomCategoryRentList'])->name('Pms.RoomCategoryRentList.View');
+	Route::post('/room-category-rent',[RoomCategoriesController::class, 'getAllroomCategoriesRent'])->name('Pms.RoomCategoryRentList');
+	// Route::get('/room-category/view/{id}',[RoomCategoriesController::class, 'roomCategoryView'])->name('Pms.RoomCategoryView');
 
-	// Room Category
-	Route::get('/rooms/add',[RoomsController::class, 'roomAdd'])->name('Pms.roomAdd.View');
-	Route::post('/rooms/add',[RoomsController::class, 'roomAddSave'])->name('Pms.roomAdd');
+
+
+	// Room
+	Route::get('/rooms/add',[RoomsController::class, 'roomAdd'])->name('Pms.RoomAdd.View');
+	Route::post('/rooms/add',[RoomsController::class, 'roomAddSave'])->name('Pms.RoomAdd');
 	Route::get('/rooms',[RoomsController::class, 'roomsList'])->name('Pms.RoomList.View');
 	Route::post('/rooms',[RoomsController::class, 'getAllRoomS'])->name('Pms.RoomList');
 

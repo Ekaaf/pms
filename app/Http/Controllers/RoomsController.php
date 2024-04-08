@@ -47,7 +47,7 @@ class RoomsController extends Controller
             return redirect()->back()->with('error', $errorMessage)->withInput();
         }
         Rooms::insert($rooms);
-        return redirect('admin/room-category')->with('success', "Successfully Saved");
+        return redirect('admin/rooms')->with('success', "Successfully Saved");
     }
 
 

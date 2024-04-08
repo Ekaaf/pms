@@ -24,7 +24,7 @@
 
         @if(checkButtonAccess('admin/rooms/add'))
         <div class="text-end">
-            <a href="{{URL::to('admin/room-category/add')}}" class="btn btn-success btn-border">
+            <a href="{{URL::to('admin/rooms/add')}}" class="btn btn-success btn-border">
                 <i class="bx bx-add-to-queue"></i>&nbsp
                 Add Rooms
             </a>

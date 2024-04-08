@@ -64,6 +64,11 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                        <th class="ps-0" scope="row">Discount :</th>
+                                        <td class="text-muted">{{$roomCategory->discount}} %
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <th class="ps-0" scope="row">Description :</th>
                                         <td class="text-muted">{!!$roomCategory->description!!}</td>
                                     </tr>

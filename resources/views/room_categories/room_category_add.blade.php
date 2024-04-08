@@ -116,6 +116,22 @@
                                 </div>
                             </div>
 
+
+                            <div class="row mb-3">
+                                <div class="col-lg-2">
+                                    <label for="nameInput" class="form-label">Discount</label>
+                                </div>
+                                <div class="col-lg-6">
+                                    <input type="number" class="form-control <?php if($errors->has('discount')) echo 'element-border';?>" id="discount" name="discount" placeholder="Discount">
+                                    @if($errors->has('discount'))
+                                        <div class="input-error">{{ $errors->first('discount') }}</div>
+                                    @endif
+                                </div>
+                                <div class="col-lg-4 d-flex align-items-center">
+                                    (Percentage)
+                                </div>
+                            </div>
+
                             <div class="row mb-3">
                                 <div class="col-lg-2">
                                     <label for="nameInput" class="form-label">Description</label>
