@@ -102,10 +102,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
 
 
 
-	Route::get('/room-category/edit/{id}',[RoomCategoriesController::class, 'roomCategoryEdit'])->name('Pms.RoomCategoryEdit.View');
-	Route::post('/room-category/edit/{id}',[RoomCategoriesController::class, 'roomCategoryUpdate'])->name('Pms.RoomCategoryEdit');
-	Route::post('/room-category/delete/{id}',[RoomCategoriesController::class, 'roomCategoryDelete'])->name('Pms.RoomCategoryDelete');
-	Route::get('/room-category',[RoomCategoriesController::class, 'roomCategoryList'])->name('Pms.RoomCategoryList.View');
-	Route::post('/room-category',[RoomCategoriesController::class, 'getAllroomCategories'])->name('Pms.RoomCategoryList');
-	Route::get('/room-category/view/{id}',[RoomCategoriesController::class, 'roomCategoryView'])->name('Pms.RoomCategoryView');
+	// Route::get('/room-category/edit/{id}',[RoomCategoriesController::class, 'roomCategoryEdit'])->name('Pms.RoomCategoryEdit.View');
+	// Route::post('/room-category/edit/{id}',[RoomCategoriesController::class, 'roomCategoryUpdate'])->name('Pms.RoomCategoryEdit');
+	// Route::post('/room-category/delete/{id}',[RoomCategoriesController::class, 'roomCategoryDelete'])->name('Pms.RoomCategoryDelete');
+	// Route::get('/room-category',[RoomCategoriesController::class, 'roomCategoryList'])->name('Pms.RoomCategoryList.View');
+	// Route::post('/room-category',[RoomCategoriesController::class, 'getAllroomCategories'])->name('Pms.RoomCategoryList');
+	// Route::get('/room-category/view/{id}',[RoomCategoriesController::class, 'roomCategoryView'])->name('Pms.RoomCategoryView');
 });

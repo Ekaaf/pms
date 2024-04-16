@@ -15,18 +15,26 @@ use App\SSP;
 use DateTime;
 use DatePeriod;
 use DateInterval;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Imagick\Driver;
+use App\Service\MenuService;
+
 
 class RoomCategoriesController extends Controller
 {
-    
     public function roomCategoryAdd(Request $request)
     {   
+        $request->session()->increment('count');
         $bedList = numberOfBeds();
         return view('room_categories.room_category_add')->with('bedList', $bedList);
     }
 
-    public function roomCategorySave(RoomCategorySaveRequest $request)
+    public function roomCategorySave(Request $request)
     {
+        $this->menuService = new MenuService();
+        // $this->menuService->imageUpload($request->thumb_image, 'images/', 'aaa.webp');
+        $this->menuService->imageUpload($request->thumb_image);
+        dd('test');
         $roomCategory = new RoomCategory();
         $roomCategory->category = $request->category;
         $roomCategory->size = $request->size;

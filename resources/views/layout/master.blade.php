@@ -79,8 +79,8 @@
     <script src="{{asset('assets/libs/simplebar/simplebar.min.js')}}"></script>
     <script src="{{asset('assets/libs/node-waves/waves.min.js')}}"></script>
     <script src="{{asset('assets/libs/feather-icons/feather.min.js')}}"></script>
-    <script src="{{asset('assets/js/pages/plugins/lord-icon-2.1.0.js')}}"></script>
-    <script src="{{asset('assets/js/plugins.js')}}"></script>
+    <!-- <script src="{{asset('assets/js/pages/plugins/lord-icon-2.1.0.js')}}"></script>
+    <script src="{{asset('assets/js/plugins.js')}}"></script> -->
 
     <!-- apexcharts -->
     <script src="{{asset('assets/libs/apexcharts/apexcharts.min.js')}}"></script>
@@ -104,13 +104,14 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/additional-methods.min.js"></script>
     <!-- App js -->
-    <script src="{{asset('assets/js/app.js')}}"></script>
+    <!-- showing same route call twice when uncommented -->
+    <!-- <script src="{{asset('assets/js/app.js')}}"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script src="//cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
-    <script src="//cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js"></script>
-    <script src="//cdn.datatables.net/buttons/1.2.4/js/buttons.flash.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
     <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
     <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.html5.min.js"></script>

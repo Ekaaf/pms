@@ -28,6 +28,7 @@ class RoomCategorySaveRequest extends FormRequest
             'people_child' => 'required|numeric',
             'bed' => 'required',
             'price' => 'required|numeric',
+            'thumb_image' => 'required|image',
             'description' => 'required',
             'package' => 'required',
             'facilities' => 'required',

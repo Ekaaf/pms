@@ -22,6 +22,8 @@ use App\Models\Job;
 use Illuminate\Support\Facades\Auth;
 use DateTime;
 use App\SSP;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Imagick\Driver;
 
 class MenuService{
 
@@ -140,6 +142,31 @@ class MenuService{
                             ->where(['user_access.role_id' => $roleID])
                             ->get()->toArray();
         return $menuAccess;
+    }
+
+    public function imageUpload($file, $filePath = '', $fileName ='', $scaleWidth = 0, $format = 'webp', $quality = 70){
+        $manager = new ImageManager(new Driver());
+        $image = $manager->read($file);
+
+        // scale down to fixed width keeping ratio
+        if($scaleWidth >0){
+            $image->scaleDown(width: $scaleWidth);
+        }
+
+        if($fileName == ''){
+            $fileName = time();
+        }
+
+        if($filePath != ''){
+            $fileName = $filePath.$fileName;
+        }
+
+        if($format == 'webp'){
+            $image->toWebp($quality)->save($fileName.'.webp');
+        }
+        else{
+            $image->toJpeg($quality)->save($fileName.'.jpeg');
+        }
     }
 }
 ?>

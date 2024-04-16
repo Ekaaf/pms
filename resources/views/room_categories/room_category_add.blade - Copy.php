@@ -30,7 +30,7 @@
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-body">
-                        <form action="{{URL::to('admin/room-category/add')}}" method="post" enctype='multipart/form-data'>
+                        <form action="{{URL::to('admin/room-category/add')}}" method="post">
                     
                             @csrf
                             <div class="row mb-3">
@@ -145,10 +145,7 @@
                                             <i class="ri-delete-bin-6-line"></i>
                                         </button>
                                     </div>
-                                    <input type="file" class="form-control <?php if($errors->has('thumb_image')) echo 'element-border';?>" id="thumb_image" name="thumb_image" placeholder="thumb_image">
-                                    @if($errors->has('thumb_image'))
-                                        <div class="input-error">{{ $errors->first('thumb_image') }}</div>
-                                    @endif
+                                    <input type="file" class="form-control <?php if($errors->has('discount')) echo 'element-border';?>" id="thumb_image" name="thumb_image" placeholder="thumb_image">
                                 </div>
                             </div>
 
@@ -284,7 +281,6 @@
 <script src="{{asset('assets/libs/filepond-plugin-image-exif-orientation/filepond-plugin-image-exif-orientation.min.js')}}"></script>
 <script src="{{asset('assets/libs/filepond-plugin-file-encode/filepond-plugin-file-encode.min.js')}}"></script>
 <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
-<script src="{{asset('assets/custom/js/custom.js')}}"></script>
 
 <script type="text/javascript">
     $(document).ready(function() {
