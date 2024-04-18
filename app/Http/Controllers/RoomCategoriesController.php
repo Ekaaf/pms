@@ -189,7 +189,12 @@ class RoomCategoriesController extends Controller
 
 
     public function RoomCategoryView(Request $request, $id){
-        $roomCategory = RoomCategory::where('id',$id)->first();
+        $roomCategory = RoomCategory::join('files', 'room_categories.id', 'files.element_id')->where('room_categories.id',$id)->where('element_id',$id)
+                                        ->where(function ($query) {
+                                            $query->where('type', '=', 'room-category-thumb')
+                                                  ->orWhere('type', '=', 'room-category-other-image');
+                                        })->get();
+        dd($roomCategory);
         return view('room_categories.room_category_view')->with('roomCategory', $roomCategory);
     }
 
