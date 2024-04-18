@@ -158,7 +158,7 @@
                                     <label for="nameInput" class="form-label">Other Images</label>
                                 </div>
                                 <div class="col-lg-10">
-                                    <input type="file" class="my-pond" id="other_image" name="filepond"/>
+                                    <input type="file" class="my-pond" id="other_image" name="other_image[]" multiple/>
                                     <!-- <input type="file" class="filepond filepond-input-multiple" multiple name="filepond" data-allow-reorder="true" data-max-file-size="3MB" data-max-files="3"> -->
                                 </div>
                             </div>
@@ -299,11 +299,15 @@
     // FilePond.registerPlugin(FilePondPluginFileValidateSize);
     FilePond.registerPlugin(FilePondPluginFileValidateType, FilePondPluginImagePreview);
     $('.my-pond').filepond({
+            storeAsFile: true,
             allowMultiple: true,
             maxFileSize: '10MB',
             acceptedFileTypes: ['image/*']
         }
     );
+    // $('.my-pond').on('FilePond:addfile', function (e) {
+    //     console.log('file added event', e);
+    // });
     $("#thumb_image").change(function() {
         readURL(this, '#thumb_preview');
         $("#remove_image_button").show();

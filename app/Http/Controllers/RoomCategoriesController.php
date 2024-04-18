@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\RoomCategory;
 use App\Models\RoomCategoryRent;
+use App\Models\FileModel;
 use App\Http\Requests\RoomCategory\RoomCategorySaveRequest;
 use App\Http\Requests\RoomCategory\RoomCategoryUpdateRequest;
 use App\Http\Requests\RoomCategoryRent\RoomCategoryRentSaveRequest;
@@ -18,6 +19,7 @@ use DateInterval;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Imagick\Driver;
 use App\Service\MenuService;
+use Illuminate\Support\Facades\DB;
 
 
 class RoomCategoriesController extends Controller
@@ -30,33 +32,67 @@ class RoomCategoriesController extends Controller
     }
 
     public function roomCategorySave(Request $request)
-    {
-        $this->menuService = new MenuService();
-        // $this->menuService->imageUpload($request->thumb_image, 'images/', 'aaa.webp');
-        $this->menuService->imageUpload($request->thumb_image);
-        dd('test');
-        $roomCategory = new RoomCategory();
-        $roomCategory->category = $request->category;
-        $roomCategory->size = $request->size;
-        $roomCategory->people_adult = $request->people_adult;
-        $roomCategory->people_child = $request->people_child;
-        $roomCategory->bed = $request->bed;
-        $roomCategory->price = $request->price;
-        $roomCategory->discount = $request->discount;
-        $roomCategory->description = $request->description;
-        $roomCategory->package = $request->package;
-        $roomCategory->facilities = $request->facilities;
-        $roomCategory->check_in = $request->check_in;
-        $roomCategory->check_out = $request->check_out;
-        $roomCategory->check_in_instruction = $request->check_in_instruction;
-        $roomCategory->cancellation_policy = $request->cancellation_policy;
-        $roomCategory->created_by = Auth::user()->id;
-        $success = $roomCategory->save();
+    {   
 
-        if($success){
+        try {
+            DB::beginTransaction();
+            $files[] = [];
+            $this->menuService = new MenuService();
+
+            $roomCategory = new RoomCategory();
+            $roomCategory->category = $request->category;
+            $roomCategory->size = $request->size;
+            $roomCategory->people_adult = $request->people_adult;
+            $roomCategory->people_child = $request->people_child;
+            $roomCategory->bed = $request->bed;
+            $roomCategory->price = $request->price;
+            $roomCategory->discount = $request->discount;
+            $roomCategory->description = $request->description;
+            $roomCategory->package = $request->package;
+            $roomCategory->facilities = $request->facilities;
+            $roomCategory->check_in = $request->check_in;
+            $roomCategory->check_out = $request->check_out;
+            $roomCategory->check_in_instruction = $request->check_in_instruction;
+            $roomCategory->cancellation_policy = $request->cancellation_policy;
+            $roomCategory->created_by = Auth::user()->id;
+            $roomCategory->save();
+
+            $room_category_id = $roomCategory->id;
+            $thumb_image_url = 'images/room-category/'.$request->category.'/';
+            $thumb_filename = $request->category.'_thumb';
+
+            $this->menuService->imageUpload($request->thumb_image, $thumb_image_url, $thumb_filename, 800, 'webp', 70);
+
+            // dd($request->thumb_image);
+            $files[0]['element_id'] = $room_category_id;
+            $files[0]['type'] = 'room-category-thumb';
+            $files[0]['path'] = $thumb_image_url;
+            $files[0]['filename'] = $thumb_filename;
+            $files[0]['last_modified_by'] = Auth::user()->id;
+            $files[0]['created_at'] = date("Y-m-d H:i:s");
+
+            $i = 1;
+            foreach($request->other_image as $image){
+                $other_image_url = 'images/room-category/'.$request->category.'/';
+                $other_image_filename = $request->category.'_other_image_'.$i;
+                $this->menuService->imageUpload($image, $other_image_url, $other_image_filename, 800, 'webp', 70);
+
+                $files[$i]['element_id'] = $room_category_id;
+                $files[$i]['type'] = 'room-category-other-image';
+                $files[$i]['path'] = $other_image_url;
+                $files[$i]['filename'] = $other_image_filename;
+                $files[$i]['last_modified_by'] = Auth::user()->id;
+                $files[$i]['created_at'] = date("Y-m-d H:i:s");
+
+                $i++;
+            }
+
+            FileModel::insert($files);
+            DB::commit(); 
             return redirect('admin/room-category')->with('success', "Successfully Saved");
-        }
-        else{
+        } catch (\Exception $e) {
+            dd($e);
+            DB::rollback();
             return redirect()->back()->with('error', "Couldn't save!")->withInput();
         }
     }

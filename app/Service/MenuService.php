@@ -145,6 +145,13 @@ class MenuService{
     }
 
     public function imageUpload($file, $filePath = '', $fileName ='', $scaleWidth = 0, $format = 'webp', $quality = 70){
+        // if (!is_dir($filePath)) {
+        //     mkdir($filePath, 0755, true);
+        // }
+        // dd($fileName);
+        if(!is_dir($filePath)){
+            mkdir($filePath, 0755, true);
+        }
         $manager = new ImageManager(new Driver());
         $image = $manager->read($file);
 
