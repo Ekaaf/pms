@@ -64,6 +64,48 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                        <th class="ps-0" scope="row">Thumb Image :</th>
+                                        <td class="text-muted">
+                                            <div class="image-display-div">
+                                                <img src="{{URL::to($images['room-category-thumb'][0]['path'].$images['room-category-thumb'][0]['filename'])}}" class="img-thumbnail">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="ps-0" scope="row">Other Images :</th>
+                                        <td class="text-muted">
+
+                                        <div id="carouselExampleIndicators" class="carousel carousel-dark slide" data-bs-ride="carousel" style="width: 70%;">
+                                          <div class="carousel-indicators">
+                                            @php $i = 0; @endphp
+                                            @foreach($images['room-category-other-image'] as $room)
+                                                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{$i}}" class="active" aria-current="true" aria-label="Slide {{$i}}"></button>
+                                            @php $i++; @endphp
+                                            @endforeach
+                                          </div>
+                                          <div class="carousel-inner">
+                                            @php $i = 0; @endphp
+                                            @foreach($images['room-category-other-image'] as $room)
+                                                <div class="carousel-item <?php if($i==0) echo 'active';?>">
+                                                    <img src="{{URL::to($room->path.$room->filename)}}" class="d-block w-100" alt="...">
+                                                </div>
+                                            @php $i++; @endphp
+                                            @endforeach
+                                            
+                                          </div>
+                                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Previous</span>
+                                            </button>
+                                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Next</span>
+                                            </button>
+                                        </div>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <th class="ps-0" scope="row">Discount :</th>
                                         <td class="text-muted">{{$roomCategory->discount}} %
                                         </td>
@@ -114,11 +156,7 @@
 <script src="{{asset('assets/custom/js/ckeditorinit.js')}}"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        initializeCkEditor('description', '');
-        initializeCkEditor('package', '');
-        initializeCkEditor('facilities', '');
-        initializeCkEditor('check_in_instruction', '');
-        initializeCkEditor('cancellation_policy', '');
+
     });
 </script>
 @endsection

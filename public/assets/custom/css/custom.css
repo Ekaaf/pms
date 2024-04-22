@@ -8,3 +8,11 @@
 .element-border{
     border: 1px solid #ee5252 !important;
 }
+
+.image-display-div{
+    display: inline-flex;
+    border: 1px solid #dee2e6;
+    padding: 1%;
+    border-top-left-radius: .25rem; 
+    border-top-right-radius: .25rem
+}

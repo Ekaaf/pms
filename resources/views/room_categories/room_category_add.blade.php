@@ -277,6 +277,8 @@
 <!-- <script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/classic/ckeditor.js"></script> -->
 <script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/super-build/ckeditor.js"></script>
 <script src="{{asset('assets/custom/js/ckeditorinit.js')}}"></script>
+
+<!-- filepond -->
 <script src="{{asset('assets/libs/filepond/filepond.min.js')}}"></script>
 <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
 <script src="{{asset('assets/libs/filepond-plugin-image-preview/filepond-plugin-image-preview.min.js')}}"></script>
@@ -284,6 +286,7 @@
 <script src="{{asset('assets/libs/filepond-plugin-image-exif-orientation/filepond-plugin-image-exif-orientation.min.js')}}"></script>
 <script src="{{asset('assets/libs/filepond-plugin-file-encode/filepond-plugin-file-encode.min.js')}}"></script>
 <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+
 <script src="{{asset('assets/custom/js/custom.js')}}"></script>
 
 <script type="text/javascript">
@@ -305,9 +308,6 @@
             acceptedFileTypes: ['image/*']
         }
     );
-    // $('.my-pond').on('FilePond:addfile', function (e) {
-    //     console.log('file added event', e);
-    // });
     $("#thumb_image").change(function() {
         readURL(this, '#thumb_preview');
         $("#remove_image_button").show();

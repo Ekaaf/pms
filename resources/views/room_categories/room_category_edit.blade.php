@@ -1,6 +1,8 @@
 @extends('layout.master')
 
 @section('content')
+    <link rel="stylesheet" href="{{asset('assets/libs/filepond/filepond.min.css')}}" type="text/css" />
+    <link rel="stylesheet" href="{{asset('assets/libs/filepond-plugin-image-preview/filepond-plugin-image-preview.min.css')}}">
 
     <div class="page-content">
         <div class="container-fluid">
@@ -28,7 +30,7 @@
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-body">
-                        <form action="{{URL::to('admin/room-category/edit')}}/{{$roomCategory->id}}" method="post">
+                        <form action="{{URL::to('admin/room-category/edit')}}/{{$roomCategory->id}}" method="post" enctype='multipart/form-data'>
                     
                             @csrf
                             <div class="row mb-3">
@@ -133,6 +135,36 @@
                                 </div>
                                 <div class="col-lg-4 d-flex align-items-center">
                                     (Percentage)
+                                </div>
+                            </div>
+
+
+                            <div class="row mb-3">
+                                <div class="col-lg-2">
+                                    <label for="nameInput" class="form-label">Thumb Image</label>
+                                </div>
+                                <div class="col-lg-10">
+                                    <div id="thumb_preview_div" style="position: relative; margin-bottom: 1.5%;">
+                                        <img class="img-thumbnail" alt="200x200" width="200" id="thumb_preview" src="{{URL::to($images['room-category-thumb'][0]['path'].$images['room-category-thumb'][0]['filename'])}}" >
+                                        <button type="button" class="btn btn-success waves-effect waves-light" style="position: absolute; bottom: 0; margin-left: 1.5%;" id="change_image_button" onclick="$('#thumb_image').trigger('click'); ">
+                                            <i class="bx bx-edit"></i>
+                                        </button>
+                                    </div>
+                                    <input type="file" class="form-control <?php if($errors->has('thumb_image')) echo 'element-border';?>" id="thumb_image" name="thumb_image" placeholder="thumb_image" style="display: none;">
+                                    @if($errors->has('thumb_image'))
+                                        <div class="input-error">{{ $errors->first('thumb_image') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+
+
+                            <div class="row mb-3">
+                                <div class="col-lg-2">
+                                    <label for="nameInput" class="form-label">Other Images</label>
+                                </div>
+                                <div class="col-lg-10">
+                                    <input type="file" class="my-pond" id="other_image" name="other_image[]" multiple/>
+                                    <!-- <input type="file" class="filepond filepond-input-multiple" multiple name="filepond" data-allow-reorder="true" data-max-file-size="3MB" data-max-files="3"> -->
                                 </div>
                             </div>
 
@@ -253,6 +285,17 @@
 <!-- <script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/classic/ckeditor.js"></script> -->
 <script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/super-build/ckeditor.js"></script>
 <script src="{{asset('assets/custom/js/ckeditorinit.js')}}"></script>
+
+<script src="{{asset('assets/libs/filepond/filepond.min.js')}}"></script>
+<script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
+<script src="{{asset('assets/libs/filepond-plugin-image-preview/filepond-plugin-image-preview.min.js')}}"></script>
+<script src="{{asset('assets/libs/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js')}}"></script>
+<script src="{{asset('assets/libs/filepond-plugin-image-exif-orientation/filepond-plugin-image-exif-orientation.min.js')}}"></script>
+<script src="{{asset('assets/libs/filepond-plugin-file-encode/filepond-plugin-file-encode.min.js')}}"></script>
+<script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+
+<script src="{{asset('assets/custom/js/custom.js')}}"></script>
+
 <script type="text/javascript">
     $(document).ready(function() {
         initializeCkEditor('description', '');
@@ -260,6 +303,31 @@
         initializeCkEditor('facilities', '');
         initializeCkEditor('check_in_instruction', '');
         initializeCkEditor('cancellation_policy', '');
+    });
+    var other_files = [];
+    var i = 0;
+    @foreach($images['room-category-other-image'] as $img)
+        other_files[i] = '../../../{{$img->path.$img->filename}}';
+        i++;
+    @endforeach
+    
+
+    FilePond.registerPlugin(FilePondPluginFileValidateType, FilePondPluginImagePreview);
+    $('.my-pond').filepond({
+            storeAsFile: true,
+            allowMultiple: true,
+            maxFileSize: '10MB',
+            acceptedFileTypes: ['image/*']
+        }
+    );
+    $('.my-pond').filepond('addFiles', other_files)
+                 .then(function (file) {
+            // console.log('file added', file);
+    });
+    
+    $("#thumb_image").change(function() {
+        readURL(this, '#thumb_preview');
+        $("#remove_image_button").show();
     });
 </script>
 @endsection

@@ -24,6 +24,7 @@ use DateTime;
 use App\SSP;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Imagick\Driver;
+use App\Models\FileModel;
 
 class MenuService{
 
@@ -148,7 +149,7 @@ class MenuService{
         // if (!is_dir($filePath)) {
         //     mkdir($filePath, 0755, true);
         // }
-        // dd($fileName);
+        // dd($file);
         if(!is_dir($filePath)){
             mkdir($filePath, 0755, true);
         }
@@ -174,6 +175,19 @@ class MenuService{
         else{
             $image->toJpeg($quality)->save($fileName.'.jpeg');
         }
+    }
+
+
+    public function getImages($id, $types){
+        $images = FileModel::where('element_id',$id)->whereIn('type', $types)->get();
+        $data = [];
+        foreach($types as $type){
+            $data[$type] = [];
+        }
+        foreach($images as $image){
+            $data[$image->type][] = $image;
+        }
+        return $data;
     }
 }
 ?>

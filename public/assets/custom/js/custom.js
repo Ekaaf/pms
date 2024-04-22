@@ -14,3 +14,10 @@ function removeImage(imageId, inputId, removeBtn){
     $(inputId).val('');
     $(removeBtn).hide();
 }
+
+
+function changeImage(imageId, inputId, removeBtn){
+    $(imageId).attr('src', '../../images/no-img.jpg');
+    $(inputId).val('');
+    $(removeBtn).hide();
+}
