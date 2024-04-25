@@ -13,15 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('menu_methods', function (Blueprint $table) {
+        Schema::create('payment_records', function (Blueprint $table) {
             $table->increments('id');
-            $table->smallInteger('menu_id');
-            $table->smallInteger('type')->nullable();
-            $table->string('path', 500)->nullable();
-            $table->string('method_name', 500)->nullable();
-            $table->smallInteger('default')->default(0);
-            $table->integer('created_by')->nullable();
-            $table->timestamp('created_at')->useCurrent();
+            $table->integer('billing_id');
+            $table->string('payment_medium', 30);
+            $table->decimal('amount', 10, 0);
+            $table->decimal('deduction', 10, 0);
+            $table->integer('paid_by');
+            $table->timestamp('created_at');
             $table->timestamp('updated_at')->nullable();
         });
     }
@@ -33,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('menu_methods');
+        Schema::dropIfExists('payment_records');
     }
 };

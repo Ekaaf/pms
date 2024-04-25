@@ -13,13 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('room_categories_rent', function (Blueprint $table) {
+        Schema::create('biiling_other_info', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('room_category_id');
-            $table->date('rent_date');
-            $table->decimal('price', 5, 0);
-            $table->decimal('discount', 2, 0);
-            $table->decimal('created_by', 10, 0);
+            $table->integer('billing_id');
+            $table->string('identity', 20)->nullable();
+            $table->string('identity_number', 100)->primary();
+            $table->date('dob')->nullable();
+            $table->string('nationality', 30)->nullable();
+            $table->string('estimated_arrival_time', 20)->nullable();
+            $table->integer('created_by');
             $table->timestamp('created_at');
             $table->timestamp('updated_at')->nullable();
         });
@@ -32,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('room_categories_rent');
+        Schema::dropIfExists('biiling_other_info');
     }
 };

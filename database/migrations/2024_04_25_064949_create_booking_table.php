@@ -30,6 +30,7 @@ return new class extends Migration
             $table->decimal('due_amount', 10, 0)->nullable();
             $table->decimal('vat', 10, 0)->nullable();
             $table->decimal('created_by', 10, 0)->nullable();
+            $table->integer('billing_id')->nullable();
             $table->timestamps();
         });
     }

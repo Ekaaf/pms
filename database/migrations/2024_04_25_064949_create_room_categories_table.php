@@ -23,15 +23,15 @@ return new class extends Migration
             $table->text('package')->nullable();
             $table->text('facilities');
             $table->smallInteger('created_by');
-            $table->timestamp('created_at');
-            $table->timestamp('updated_at')->nullable();
             $table->string('bed');
             $table->string('check_in', 50);
             $table->string('check_out', 50);
             $table->text('check_in_instruction')->nullable();
             $table->text('cancellation_policy')->nullable();
-            $table->decimal('price', 10, 0)->nullable();
-            $table->decimal('discount', 2, 0);
+            $table->decimal('price', 10, 0);
+            $table->decimal('discount', 10, 0);
+            $table->timestamp('created_at');
+            $table->timestamp('updated_at')->nullable();
         });
     }
 

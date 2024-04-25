@@ -13,11 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('user_access', function (Blueprint $table) {
+        Schema::create('files', function (Blueprint $table) {
             $table->increments('id');
-            $table->smallInteger('menu_method_id');
-            $table->smallInteger('role_id');
-            $table->timestamps();
+            $table->string('type', 100);
+            $table->string('path', 500);
+            $table->integer('element_id');
+            $table->integer('last_modified_by');
+            $table->string('filename', 100);
+            $table->timestamp('created_at');
+            $table->timestamp('updated_at')->nullable();
         });
     }
 
@@ -28,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_access');
+        Schema::dropIfExists('files');
     }
 };
