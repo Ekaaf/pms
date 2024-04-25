@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      *
@@ -17,7 +16,7 @@ return new class extends Migration
             $table->increments('id');
             $table->integer('billing_id');
             $table->string('identity', 20)->nullable();
-            $table->string('identity_number', 100)->primary();
+            $table->string('identity_number', 100)->nullable();
             $table->date('dob')->nullable();
             $table->string('nationality', 30)->nullable();
             $table->string('estimated_arrival_time', 20)->nullable();
