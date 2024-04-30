@@ -8,6 +8,7 @@ use App\Http\Controllers\RolesController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\RoomCategoriesController;
 use App\Http\Controllers\RoomsController;
+use App\Http\Controllers\ReservationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -101,11 +102,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
 	Route::post('/rooms',[RoomsController::class, 'getAllRoomS'])->name('Pms.RoomList');
 
 
-
-	// Route::get('/room-category/edit/{id}',[RoomCategoriesController::class, 'roomCategoryEdit'])->name('Pms.RoomCategoryEdit.View');
-	// Route::post('/room-category/edit/{id}',[RoomCategoriesController::class, 'roomCategoryUpdate'])->name('Pms.RoomCategoryEdit');
-	// Route::post('/room-category/delete/{id}',[RoomCategoriesController::class, 'roomCategoryDelete'])->name('Pms.RoomCategoryDelete');
-	// Route::get('/room-category',[RoomCategoriesController::class, 'roomCategoryList'])->name('Pms.RoomCategoryList.View');
-	// Route::post('/room-category',[RoomCategoriesController::class, 'getAllroomCategories'])->name('Pms.RoomCategoryList');
-	// Route::get('/room-category/view/{id}',[RoomCategoriesController::class, 'roomCategoryView'])->name('Pms.RoomCategoryView');
+	// Reservation
+	Route::get('/reservation',[ReservationController::class, 'reservation'])->name('Pms.Reservation.View');
+	Route::post('/search-room-category',[ReservationController::class, 'searchRoomCategory'])->name('Pms.SearchRoomCategory');
 });

@@ -11,7 +11,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-transparent">
-                        <h4 class="mb-sm-0">Room Category Add {{session('count');}}</h4>
+                        <h4 class="mb-sm-0">Room Category Add</h4>
 
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
