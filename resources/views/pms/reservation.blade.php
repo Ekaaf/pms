@@ -163,10 +163,11 @@
             dataType: 'json',
         })
         .done(function (data) {
-            console.log(data);
+            
             $("#room_list_div").empty();
             var html = "";
             $.each(data, function(i, item) {
+                console.log(i);
                 html += '<div class="card">'+
                             '<div class="card-body">'+
                                 '<div class="row me-1">'+
@@ -174,31 +175,34 @@
                                         '<img class="img-thumbnail" src="../'+item.path+item.filename+'">'+
                                     '</div>'+
                                     '<div class="col-sm-8 p-3 border rounded">'+
+                                    '<div>'+
                                         '<h4 style="color:#8c68cd;">'+item.category+'</h4>'+
                                         'Room Capacity: '+item.people_adult+' Adults '+item.people_child+' Children'+
                                         '<div class="row me-1">'+
                                             '<div class="col-sm-8">'+
                                                 'Room Rates Exclusive of Ser. Chg. & VAT'+
                                             '</div>'+
-                                            '<div id="room_plus_"'+i+' class="col-sm-4 p-2 border rounded">'+
+                                            '<div class="col-sm-4 p-2 border rounded">'+
                                                 '<b style="color:#8c68cd;">From BDT '+item.price+'</b>'+
                                                 '<br>Per Room/Night'+
                                             '</div>'+
                                         '</div>'+
-                                        '<button class="btn btn-success btn-border mt-3 me-1 float-sm-end" onclick="showInputPlus(this, '+item.people_adult+', '+item.people_child+')">'+
+                                        '<button class="btn btn-success btn-border mt-3 me-1 float-sm-end" onclick="showInputPlus(this, '+item.people_adult+', '+item.people_child+','+item.no_of_rooms+', '+item.id+')">'+
                                             'Add Room'+
                                         '</button>'+
                                         '<div class="input-step mt-3 me-1 float-sm-end" style="display:none;">'+
                                             '<button type="button" class="minus" onclick="decrement(this);">–</button>'+
-                                            '<input type="number" class="product-quantity" value="0" min="0" max="500">'+
-                                            '<button type="button" class="plus" onclick="increment(this, '+item.people_adult+', '+item.people_child+');">+</button>'+
+                                            '<input type="number" class="product-quantity" value="0" min="0" max="5">'+
+                                            '<button type="button" class="plus" onclick="increment(this, '+item.people_adult+', '+item.people_child+', '+item.no_of_rooms+', '+item.id+');">+</button>'+
                                         '</div>'+
+                                    '</div>'+
+                                    '<button class="btn btn-success btn-border mt-3 me-1 float-sm-end" style="display:none;" onclick="confirmRoom(this, '+item.id+');">'+
+                                            'Confirm'+
+                                    '</button>'+
                                     '</div>'+
                                 '</div>'+
                             '</div>'+
                         '</div>';
-            });
-            $( document ).ready(function() {
             });
             $("#room_list_div").append(html)
             $("#loading_div").hide();
@@ -207,49 +211,42 @@
     }
 
 
-    function showInputPlus(element, people_adult, people_child){
+    function showInputPlus(element, people_adult, people_child, no_of_rooms, id){
         $(element).hide();
         $(element).next().show();
-        increment($(element).next().children().eq(2), people_adult, people_child);
+        increment($(element).next().children().eq(2), people_adult, people_child, no_of_rooms, id);
         $(element).next().next().show();
     }
 
-    function increment(element, people_adult, people_child){
+    function increment(element, people_adult, people_child, no_of_rooms, id){
         var value = $(element).prev().val();
+        if(value >= no_of_rooms){
+            alert('No more room available');
+            return false;
+        }
         $(element).prev().val(++value);
-        console.log(people_adult)
-        createPeopleCount(element, people_adult, people_child)
+        createPeopleCount(element, people_adult, people_child, id)
     }
 
     function decrement(element){
         var value = $(element).next().val();
-        if(value > 0){
-            $(element).next().val(--value)
+        console.log(value)
+        if(value > 1){
+            $(element).next().val(--value);
+            $(element).parent().parent().find($('.people-count').eq(value)).remove();
         }
     }
 
-    function createPeopleCount(element, people_adult, people_child){
+    function createPeopleCount(element, people_adult, people_child, id){
+        var numItems = $(element).prev().val();
         var html = '<div class="row me-1 pt-2 w-100 people-count">'+
                         '<div class="col-sm-2">'+
-                            '<b>Room 1</b>'+
+                            '<b>Room '+numItems+'</b>'+
                         '</div>'+
                         '<div class="col-sm-4">'+
                             'Adults(12+) &nbsp'+
-                            '<select required>'+
+                            '<select name="people_adult_'+id+'[]" required>'+
                                 '<option value="">Select</option>';
-
-                            '</select>'+
-                        '</div>'+
-                        '<div class="col-sm-4">'+
-                            'Child(0-10) &nbsp'+
-                            '<select required>'+
-                                '<option value="">Select</option>'+
-                                '<option value="0">0</option>'+
-                                '<option value="1">1</option>'+
-                                '<option value="2">2</option>'+
-                            '</select>'+
-                        '</div>'+
-                    '</div>';
         
         for(var i=1; i<=people_adult;i++){
             html += '<option value="'+i+'">'+i+'</option>'
@@ -259,7 +256,7 @@
                     '</div>'+
                     '<div class="col-sm-4">'+
                         'Child(0-10) &nbsp'+
-                        '<select required>'+
+                        '<select name="people_child_'+id+'[]" required>'+
                             '<option value="">Select</option>';
 
         for(var i=1; i<=people_child;i++){
@@ -268,6 +265,16 @@
 
         html += '</select>'+'</div>'+'</div>';
         $(element).parent().parent().append(html);
+        $(element).parent().parent().next().show();
+    }
+
+
+    function confirmRoom(element, id){
+        var num_of_rooms = $(element).prev().find('.product-quantity').val();
+        var people_adult = $("select[name='people_adult_"+id+"[]']").map(function(){return $(this).val();}).get();
+        var people_child = $("select[name='people_child_"+id+"[]']").map(function(){return $(this).val();}).get();
+        console.log(num_of_rooms);
+        console.log(people_child);
     }
 </script>
 @endsection

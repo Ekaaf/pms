@@ -1,1 +1,2 @@
 1) discount price percentage or fixed tk
+2)image for room categories
