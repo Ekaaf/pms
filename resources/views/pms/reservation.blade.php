@@ -223,7 +223,7 @@
                                             '<button type="button" class="plus" onclick="increment(this, '+item.people_adult+', '+item.people_child+', '+item.no_of_rooms+', '+item.id+');">+</button>'+
                                         '</div>'+
                                     '</div>'+
-                                    '<button class="btn btn-success btn-border mt-3 me-1 float-sm-end" style="display:none;" onclick="confirmRoom(this, "'+itemArr+'");">'+
+                                    '<button class="btn btn-success btn-border mt-3 me-1 float-sm-end" style="display:none;" onclick="confirmRoom(this, '+item.id+');">'+
                                             'Confirm'+
                                     '</button>'+
                                     '</div>'+
@@ -298,8 +298,7 @@
     }
 
 
-    function confirmRoom(element, itemArr){
-        console.log(itemArr)
+    function confirmRoom(element, id){
         var num_of_rooms = $(element).prev().find('.product-quantity').val();
         var people_adult = $("select[name='people_adult_"+id+"[]']").map(function(){return $(this).val();}).get();
         var people_child = $("select[name='people_child_"+id+"[]']").map(function(){return $(this).val();}).get();
