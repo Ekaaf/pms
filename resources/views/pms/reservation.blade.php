@@ -43,8 +43,8 @@
                                                 <input type="date" class="form-control" id="check_out" name="check_in" value="05/01/2024">
                                             </div>
                                         </div>
-                                        <div class="col-xxl-3 col-md-6">
-                                            <button type="button" class="btn btn-primary waves-effect waves-light" style="position: absolute; bottom: 0;" onclick="searchRooms();">Search</button>
+                                        <div class="col-xxl-3 col-md-6 d-flex">
+                                            <button type="button" class="btn btn-primary waves-effect waves-light align-self-end"  onclick="searchRooms();">Search</button>
                                         </div>
                                     </div>
                                 </form>
@@ -120,7 +120,34 @@
                                             <div class="card-header">
                                                 <h4 class="card-title mb-0 text-center">Booking Summary</h4>
                                             </div>
-                                            <div class="card-body" id="summary_div">
+                                            <div class="card-body" id="summary_div" style="display:none;">
+                                                <ul class="list-group">
+                                                    <li class="list-group-item">
+                                                        <b style="color:#495057;margin-right: 10%;">Dates:</b> 
+                                                        <span id="date_range">2024-05-13&nbsp; - &nbsp;2024-05-14</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <b style="color:#495057;margin-right: 10%;">Nights:</b> 
+                                                        <span id="no_of_days">1</span>
+                                                    </li>
+                                                    <li class="list-group-item" id="booked_room">
+                                                        <div>
+                                                            <b style="color:#495057;margin-right: 10%;">Superior King:</b> 
+                                                            <span>2 Adults 1 Child (1 Room)</span>
+                                                            <div class="w-100 text-end" style="color: #8c68cd"> BDT&nbsp;11,200</div>
+                                                        </div>
+                                                        <br>
+                                                        <div>
+                                                            <b style="color:#495057;margin-right: 10%;">Superior King:</b> 
+                                                            <span>2 Adults 1 Child (1 Room)</span>
+                                                            <div class="w-100 text-end" style="color: #8c68cd;"> BDT&nbsp;11,200</div>
+                                                        </div>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <b style="color:#495057;margin-right: 10%;">Total:</b> 
+                                                        <b class="float-end" style="font-size: 20px;color: #8c68cd">BDT&nbsp; 5000 </b>
+                                                    </li>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
@@ -167,7 +194,7 @@
             $("#room_list_div").empty();
             var html = "";
             $.each(data, function(i, item) {
-                console.log(i);
+                var itemArr = Object.values(item)
                 html += '<div class="card">'+
                             '<div class="card-body">'+
                                 '<div class="row me-1">'+
@@ -187,7 +214,7 @@
                                                 '<br>Per Room/Night'+
                                             '</div>'+
                                         '</div>'+
-                                        '<button class="btn btn-success btn-border mt-3 me-1 float-sm-end" onclick="showInputPlus(this, '+item.people_adult+', '+item.people_child+','+item.no_of_rooms+', '+item.id+')">'+
+                                        '<button class="btn btn-primary btn-border mt-3 me-1 float-sm-end" onclick="showInputPlus(this, '+item.people_adult+', '+item.people_child+','+item.no_of_rooms+', '+item.id+')">'+
                                             'Add Room'+
                                         '</button>'+
                                         '<div class="input-step mt-3 me-1 float-sm-end" style="display:none;">'+
@@ -196,7 +223,7 @@
                                             '<button type="button" class="plus" onclick="increment(this, '+item.people_adult+', '+item.people_child+', '+item.no_of_rooms+', '+item.id+');">+</button>'+
                                         '</div>'+
                                     '</div>'+
-                                    '<button class="btn btn-success btn-border mt-3 me-1 float-sm-end" style="display:none;" onclick="confirmRoom(this, '+item.id+');">'+
+                                    '<button class="btn btn-success btn-border mt-3 me-1 float-sm-end" style="display:none;" onclick="confirmRoom(this, "'+itemArr+'");">'+
                                             'Confirm'+
                                     '</button>'+
                                     '</div>'+
@@ -207,6 +234,8 @@
             $("#room_list_div").append(html)
             $("#loading_div").hide();
             $("#available_room_div").show();
+            $("#date_range").text(check_in+'-'+check_out);
+            $("#no_of_days").text((new Date(new Date(check_out) - new Date(check_in)))/1000/60/60/24);
         });
     }
 
@@ -269,12 +298,26 @@
     }
 
 
-    function confirmRoom(element, id){
+    function confirmRoom(element, itemArr){
+        console.log(itemArr)
         var num_of_rooms = $(element).prev().find('.product-quantity').val();
         var people_adult = $("select[name='people_adult_"+id+"[]']").map(function(){return $(this).val();}).get();
         var people_child = $("select[name='people_child_"+id+"[]']").map(function(){return $(this).val();}).get();
-        console.log(num_of_rooms);
-        console.log(people_child);
+        if(people_adult.length != num_of_rooms){
+            alert('Please select number of adults in each room');
+            return false;
+        }
+        if(people_child.length != num_of_rooms){
+            alert('Please select number of children in each room');
+            return false;
+        }
+        var html = "";
+        // <div>
+        //     <b style="color:#495057;margin-right: 10%;">Superior King:</b> 
+        //     <span>2 Adults 1 Child (1 Room)</span>
+        //     <div class="w-100 text-end" style="color: #8c68cd"> BDT&nbsp;11,200</div>
+        // </div>
+        $("#summary_div").show();
     }
 </script>
 @endsection
