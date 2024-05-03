@@ -43,4 +43,9 @@ class ReservationController extends Controller
         $request->session()->put('booking_data_temp', $input);
         return response()->json($input);
     }
+
+
+    public function billingInfo(Request $request){
+        return view('pms.billing_info');
+    }
 }

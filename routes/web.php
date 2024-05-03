@@ -106,4 +106,5 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
 	Route::get('/reservation',[ReservationController::class, 'reservation'])->name('Pms.Reservation.View');
 	Route::post('/search-room-category',[ReservationController::class, 'searchRoomCategory'])->name('Pms.SearchRoomCategory');
 	Route::post('/book-room-temp',[ReservationController::class, 'bookRoomTemp'])->name('Pms.bookRoomTemp');
+	Route::get('/billing-info',[ReservationController::class, 'billingInfo'])->name('Pms.BillingInfo.View');
 });

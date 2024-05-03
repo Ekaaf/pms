@@ -67,52 +67,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-sm-8 pe-0" id="room_list_div">
-                                        <!-- <div class="card">
-                                            <div class="card-body">
-                                                <div class="row me-1">
-                                                    <div class="col-sm-4">
-                                                        <img class="img-thumbnail" src="../images/room-category/Sea View/Sea View_thumb.webp">
-                                                    </div>
-                                                    <div class="col-sm-8 p-3 border rounded">
-                                                        <h4 style="color:#8c68cd;">Sea View</h4>Room Capacity: 2 Adults 2 Children <div class="row me-1">
-                                                            <div class="col-sm-8">Room Rates Exclusive of Ser. Chg. &amp; VAT</div>
-                                                            <div id="room_plus_" 0="" class="col-sm-4 p-2 border rounded">
-                                                                <b style="color:#8c68cd;">From BDT 5000</b>
-                                                                <br>Per Room/Night
-                                                            </div>
-                                                        </div>
-                                                        <button class="btn btn-success btn-border mt-3 me-1 float-sm-end" onclick="showInputPlus(this)" >Add Room</button>
-                                                        <div class="input-step mt-3 me-1 float-sm-end" style="">
-                                                            <button type="button" class="minus" onclick="decrement(this);">–</button>
-                                                            <input type="number" class="product-quantity" value="0" min="0" max="500">
-                                                            <button type="button" class="plus" onclick="increment(this);">+</button>
-                                                        </div>
-                                                        <div class="row me-1 pt-2 w-100">
-                                                            <div class="col-sm-2">
-                                                                <b>Room 1</b>
-                                                            </div>
-                                                            <div class="col-sm-4">
-                                                                Adults(12+) &nbsp
-                                                                <select required>
-                                                                    <option value="">Select</option>
-                                                                    <option value="1">1</option>
-                                                                    <option value="2">2</option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="col-sm-4">
-                                                                Child(0-10) &nbsp
-                                                                <select required>
-                                                                    <option value="">Select</option>
-                                                                    <option value="0">0</option>
-                                                                    <option value="1">1</option>
-                                                                    <option value="2">2</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div> -->
+
                                     </div>
 
                                     <div class="col-sm-4">
@@ -378,7 +333,8 @@
             dataType: 'json',
         })
         .done(function (data) {
-            console.log(data);
+            // console.log(data);
+            window.location.href = "./billing-info";
         });
 
     }
