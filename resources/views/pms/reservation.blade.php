@@ -138,6 +138,7 @@
                                                         <b class="float-end" style="font-size: 20px;color: #8c68cd" id="final_total"></b>
                                                     </li>
                                                 </ul>
+                                                <button type="button" class="btn btn-primary waves-effect waves-light w-100" onclick="bookNow();">Book Now</button>
                                             </div>
                                         </div>
                                     </div>
@@ -158,12 +159,15 @@
 <script>
     $( document ).ready(function() {
     });
+    var room_categories = [];
+    var check_in = '';
+    var check_out = ''
     function searchRooms(){
         $("#available_room_div").hide();
         $("#loading_div").show();
 
-        var check_in = $("#check_in").val();
-        var check_out = $("#check_out").val();
+        check_in = $("#check_in").val();
+        check_out = $("#check_out").val();
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -207,12 +211,12 @@
                                             'Add Room'+
                                         '</button>'+
                                         '<div class="input-step mt-3 me-1 float-sm-end" style="display:none;">'+
-                                            '<button type="button" class="minus" onclick="decrement(this);">–</button>'+
+                                            '<button type="button" class="minus" onclick="decrement(this, '+item.id+');">–</button>'+
                                             '<input type="number" class="product-quantity" value="0" min="0" max="5">'+
                                             '<button type="button" class="plus" onclick="increment(this, '+item.people_adult+', '+item.people_child+', '+item.no_of_rooms+', '+item.id+');">+</button>'+
                                         '</div>'+
                                     '</div>'+
-                                    '<button class="btn btn-success btn-border mt-3 me-1 float-sm-end" style="display:none;" onclick="confirmRoom(this, '+item.id+', \''+item.category+'\', '+item.people_adult+', '+item.people_child+', '+item.price+');">'+
+                                    '<button class="btn btn-success btn-border mt-3 me-1 float-sm-end confirm-button" style="display:none;" onclick="confirmRoom(this, '+item.id+', \''+item.category+'\', '+item.people_adult+', '+item.people_child+', '+item.price+');">'+
                                             'Confirm'+
                                     '</button>'+
                                     '</div>'+
@@ -247,13 +251,28 @@
         $(element).parent().parent().next().show();
     }
 
-    function decrement(element){
+    function decrement(element, id){
         var value = $(element).next().val();
-        console.log(value)
         if(value > 1){
             $(element).next().val(--value);
             $(element).parent().parent().find($('.people-count').eq(value)).remove();
             $(element).parent().parent().next().show();
+        }
+        else if(value == 1){
+            $(element).next().val(--value);
+            $(element).parent().hide();
+            $(element).parent().parent().find($('.people-count').eq(0)).remove();
+            $(element).parent().prev().show();
+            $("#"+id).remove();
+            $(element).parent().parent().next().hide();
+            if($("#booked_room").children().length == 0){
+                $("#summary_div").hide();
+            }
+            room_categories = room_categories.filter(function(elem){
+               return elem != id; 
+            });
+            console.log(room_categories);
+            finalPrice();
         }
     }
 
@@ -290,11 +309,13 @@
 
 
     function confirmRoom(element, id, category, room_people_adult, room_people_child, room_price){
+        if(room_categories.indexOf(id) == -1){
+            room_categories.push(id);
+        }
         var num_of_rooms = $(element).prev().find('.product-quantity').val();
         var people_adult = $("select[name='people_adult_"+id+"[]']").map(function(){ if($(this).val()!='') return $(this).val();}).get();
         var people_child = $("select[name='people_child_"+id+"[]']").map(function(){ if($(this).val()!='') return $(this).val();}).get();
-        console.log(people_adult);
-        console.log(num_of_rooms);
+
         if(people_adult.length != num_of_rooms){
             alert('Please select number of adults in each room');
             return false;
@@ -317,11 +338,33 @@
         }
         $("#"+id+"").append(html);
         $("#summary_div").show();
+        finalPrice();
+    }
+
+    function finalPrice(){
         var final_price = 0;
         $('.room-rent').each(function(i, obj) {
             final_price += parseInt($(this).text());
         });
         $("#final_total").text("BDT "+final_price );
+    }
+
+    function bookNow(){
+        $('.confirm-button').each(function(i, obj) {
+            if(!$(this).is(":hidden")){
+                alert("Please confirm rooms");
+                return false;
+            }
+        });
+        var booking_data = [];
+        console.log(booking_data);
+        $.each(room_categories,function( key, value ) {
+            console.log(value)
+            // booking_data[value]['people_adult'] = $("select[name='people_adult_"+value+"[]']").map(function(){ if($(this).val()!='') return $(this).val();}).get();
+            // booking_data[value]['people_child_'] = $("select[name='people_child_"+value+"[]']").map(function(){ if($(this).val()!='') return $(this).val();}).get();
+        });
+        console.log(booking_data);
+        // check_in, check_out, room_categories
     }
 </script>
 @endsection
