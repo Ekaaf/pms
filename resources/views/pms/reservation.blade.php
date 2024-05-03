@@ -131,21 +131,11 @@
                                                         <span id="no_of_days">1</span>
                                                     </li>
                                                     <li class="list-group-item" id="booked_room">
-                                                        <div>
-                                                            <b style="color:#495057;margin-right: 10%;">Superior King:</b> 
-                                                            <span>2 Adults 1 Child (1 Room)</span>
-                                                            <div class="w-100 text-end" style="color: #8c68cd"> BDT&nbsp;11,200</div>
-                                                        </div>
-                                                        <br>
-                                                        <div>
-                                                            <b style="color:#495057;margin-right: 10%;">Superior King:</b> 
-                                                            <span>2 Adults 1 Child (1 Room)</span>
-                                                            <div class="w-100 text-end" style="color: #8c68cd;"> BDT&nbsp;11,200</div>
-                                                        </div>
+                                                        
                                                     </li>
                                                     <li class="list-group-item">
                                                         <b style="color:#495057;margin-right: 10%;">Total:</b> 
-                                                        <b class="float-end" style="font-size: 20px;color: #8c68cd">BDT&nbsp; 5000 </b>
+                                                        <b class="float-end" style="font-size: 20px;color: #8c68cd" id="final_total"></b>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -168,7 +158,6 @@
 <script>
     $( document ).ready(function() {
     });
-
     function searchRooms(){
         $("#available_room_div").hide();
         $("#loading_div").show();
@@ -192,9 +181,9 @@
         .done(function (data) {
             
             $("#room_list_div").empty();
+            $("#booked_room").empty();
             var html = "";
             $.each(data, function(i, item) {
-                var itemArr = Object.values(item)
                 html += '<div class="card">'+
                             '<div class="card-body">'+
                                 '<div class="row me-1">'+
@@ -223,7 +212,7 @@
                                             '<button type="button" class="plus" onclick="increment(this, '+item.people_adult+', '+item.people_child+', '+item.no_of_rooms+', '+item.id+');">+</button>'+
                                         '</div>'+
                                     '</div>'+
-                                    '<button class="btn btn-success btn-border mt-3 me-1 float-sm-end" style="display:none;" onclick="confirmRoom(this, '+item.id+');">'+
+                                    '<button class="btn btn-success btn-border mt-3 me-1 float-sm-end" style="display:none;" onclick="confirmRoom(this, '+item.id+', \''+item.category+'\', '+item.people_adult+', '+item.people_child+', '+item.price+');">'+
                                             'Confirm'+
                                     '</button>'+
                                     '</div>'+
@@ -254,7 +243,8 @@
             return false;
         }
         $(element).prev().val(++value);
-        createPeopleCount(element, people_adult, people_child, id)
+        createPeopleCount(element, people_adult, people_child, id);
+        $(element).parent().parent().next().show();
     }
 
     function decrement(element){
@@ -263,6 +253,7 @@
         if(value > 1){
             $(element).next().val(--value);
             $(element).parent().parent().find($('.people-count').eq(value)).remove();
+            $(element).parent().parent().next().show();
         }
     }
 
@@ -298,10 +289,12 @@
     }
 
 
-    function confirmRoom(element, id){
+    function confirmRoom(element, id, category, room_people_adult, room_people_child, room_price){
         var num_of_rooms = $(element).prev().find('.product-quantity').val();
-        var people_adult = $("select[name='people_adult_"+id+"[]']").map(function(){return $(this).val();}).get();
-        var people_child = $("select[name='people_child_"+id+"[]']").map(function(){return $(this).val();}).get();
+        var people_adult = $("select[name='people_adult_"+id+"[]']").map(function(){ if($(this).val()!='') return $(this).val();}).get();
+        var people_child = $("select[name='people_child_"+id+"[]']").map(function(){ if($(this).val()!='') return $(this).val();}).get();
+        console.log(people_adult);
+        console.log(num_of_rooms);
         if(people_adult.length != num_of_rooms){
             alert('Please select number of adults in each room');
             return false;
@@ -310,13 +303,25 @@
             alert('Please select number of children in each room');
             return false;
         }
+        $(element).hide();
         var html = "";
-        // <div>
-        //     <b style="color:#495057;margin-right: 10%;">Superior King:</b> 
-        //     <span>2 Adults 1 Child (1 Room)</span>
-        //     <div class="w-100 text-end" style="color: #8c68cd"> BDT&nbsp;11,200</div>
-        // </div>
+        html += '<b style="color:#495057;margin-right: 10%;">'+category+':</b>'+ 
+                    '<span>'+room_people_adult*num_of_rooms+' Adults '+room_people_child*num_of_rooms+' Children ('+num_of_rooms+' Room)</span>'+
+                    '<div class="w-100 text-end" style="color: #8c68cd"> BDT&nbsp;<span class="room-rent">'+room_price*$("#no_of_days").text()*num_of_rooms +'</span></div>';
+
+        if($('#'+id).length == 0){
+            $("#booked_room").append('<div id="'+id+'"></div>');
+        }
+        else{
+            $('#'+id).empty();
+        }
+        $("#"+id+"").append(html);
         $("#summary_div").show();
+        var final_price = 0;
+        $('.room-rent').each(function(i, obj) {
+            final_price += parseInt($(this).text());
+        });
+        $("#final_total").text("BDT "+final_price );
     }
 </script>
 @endsection
