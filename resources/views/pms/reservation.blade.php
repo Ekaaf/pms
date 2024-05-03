@@ -357,14 +357,30 @@
             }
         });
         var booking_data = [];
-        console.log(booking_data);
         $.each(room_categories,function( key, value ) {
-            console.log(value)
-            // booking_data[value]['people_adult'] = $("select[name='people_adult_"+value+"[]']").map(function(){ if($(this).val()!='') return $(this).val();}).get();
-            // booking_data[value]['people_child_'] = $("select[name='people_child_"+value+"[]']").map(function(){ if($(this).val()!='') return $(this).val();}).get();
+            var arr = [value, $("select[name='people_adult_"+value+"[]']").map(function(){ if($(this).val()!='') return $(this).val();}).get(), $("select[name='people_child_"+value+"[]']").map(function(){ if($(this).val()!='') return $(this).val();}).get()]
+            booking_data.push(arr);
         });
-        console.log(booking_data);
-        // check_in, check_out, room_categories
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type: 'POST',
+            url: 'book-room-temp',
+            data: {
+              check_in : check_in,
+              check_out : check_out,
+              booking_data : booking_data,
+            },
+            dataType: 'json',
+        })
+        .done(function (data) {
+            console.log(data);
+        });
+
     }
 </script>
 @endsection

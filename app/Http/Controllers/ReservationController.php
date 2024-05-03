@@ -15,9 +15,7 @@ class ReservationController extends Controller
     public function reservation(Request $request)
     {   
         return view('pms.reservation');
-
     }
-
 
     public function searchRoomCategory(Request $request){
         $check_in = $request->check_in;
@@ -30,5 +28,19 @@ class ReservationController extends Controller
                             ->whereNotIn('room_number', $bookings)
                             ->groupBy('room_categories.id', 'files.path', 'files.filename')->get();
         return response()->json($available_rooms);
+    }
+
+
+    public function bookRoomTemp(Request $request){
+        $input[] = [];
+        $input['check_in'] = $request->check_in;
+        $input['check_out'] = $request->check_out;
+        foreach($request->booking_data as $key=>$value){
+            $input['booking_data'][$key]['room_category_id'] = $value[0];
+            $input['booking_data'][$key]['people_adult'] = $value[1];
+            $input['booking_data'][$key]['people_child'] = $value[2];
+        }
+        $request->session()->put('booking_data_temp', $input);
+        return response()->json($input);
     }
 }
