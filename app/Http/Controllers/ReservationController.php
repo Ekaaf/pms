@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Rooms;
 use App\Models\Booking;
 use Illuminate\Support\Facades\DB;
+use App\Service\MenuService;
 
 class ReservationController extends Controller
 {
@@ -32,13 +33,16 @@ class ReservationController extends Controller
 
 
     public function bookRoomTemp(Request $request){
-        $input[] = [];
+        $input = [];
         $input['check_in'] = $request->check_in;
         $input['check_out'] = $request->check_out;
         foreach($request->booking_data as $key=>$value){
             $input['booking_data'][$key]['room_category_id'] = $value[0];
-            $input['booking_data'][$key]['people_adult'] = $value[1];
-            $input['booking_data'][$key]['people_child'] = $value[2];
+            $input['booking_data'][$key]['room_category'] = $value[1];
+            $input['booking_data'][$key]['people_adult'] = $value[2];
+            $input['booking_data'][$key]['people_child'] = $value[3];
+            $input['booking_data'][$key]['room_price'] = $value[4];
+            $input['booking_data'][$key]['no_of_rooms'] = $value[5];
         }
         $request->session()->put('booking_data_temp', $input);
         return response()->json($input);
@@ -46,6 +50,31 @@ class ReservationController extends Controller
 
 
     public function billingInfo(Request $request){
-        return view('pms.billing_info');
+        $booking_data_temp = $request->session()->get('booking_data_temp');
+        // dd($booking_data_temp);
+        return view('pms.billing_info')->with('booking_data_temp', $booking_data_temp);
+    }
+
+
+    public function confirmBooking(Request $request){
+        if(null !== $request->session()->get('booking_data_temp')){
+            try {
+                DB::beginTransaction();
+                $this->menuService = new MenuService();
+                $availability = $this->menuService->checkRoomAvailability($request->session()->get('booking_data_temp'));
+                dd($availability);
+                DB::commit(); 
+                return redirect('admin/room-category')->with('success', "Successfully Saved");
+            } catch (\Exception $e) {
+                dd($e);
+                DB::rollback();
+                return redirect()->back()->with('error', "Couldn't save!")->withInput();
+            }
+        }
+        else{
+            echo "No Booking data found";
+            exit;
+        }
+        
     }
 }

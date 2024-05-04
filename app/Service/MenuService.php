@@ -25,6 +25,8 @@ use App\SSP;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Imagick\Driver;
 use App\Models\FileModel;
+use App\Models\Rooms;
+use App\Models\Booking;
 
 class MenuService{
 
@@ -188,6 +190,19 @@ class MenuService{
             $data[$image->type][] = $image;
         }
         return $data;
+    }
+
+    public function checkRoomAvailability($booking_data){
+        // dd($booking_data);
+        $room_category_id = array_column($booking_data['booking_data'], 'room_category_id');
+        $bookings = Booking::select('room_category_id', DB::raw('COUNT(id) as no_of_rooms'),)->whereIn('room_category_id', $room_category_id)->where('to_date', '<=', $booking_data['check_in'])->where('from_date', '>=', $booking_data['check_out'])->groupBy('room_category_id')->get();
+        dd($bookings);
+
+        $available_rooms = Rooms::select('room_categories.*', DB::raw('COUNT(room_categories.id) as no_of_rooms'), 'files.path', 'files.filename')->join('room_categories', 'rooms.room_category_id', 'room_categories.id')
+                            ->join('files', 'room_categories.id', 'files.element_id')
+                            ->where('files.type', 'room-category-thumb')
+                            ->whereNotIn('room_number', $bookings)
+                            ->groupBy('room_categories.id', 'files.path', 'files.filename')->get();
     }
 }
 ?>
