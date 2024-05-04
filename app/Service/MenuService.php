@@ -27,6 +27,9 @@ use Intervention\Image\Drivers\Imagick\Driver;
 use App\Models\FileModel;
 use App\Models\Rooms;
 use App\Models\Booking;
+use App\Models\Billing;
+use App\Models\BiilingOtherInfo;
+use App\Models\RoomCategory;
 
 class MenuService{
 
@@ -193,16 +196,117 @@ class MenuService{
     }
 
     public function checkRoomAvailability($booking_data){
-        // dd($booking_data);
+        $result = [];
         $room_category_id = array_column($booking_data['booking_data'], 'room_category_id');
-        $bookings = Booking::select('room_category_id', DB::raw('COUNT(id) as no_of_rooms'),)->whereIn('room_category_id', $room_category_id)->where('to_date', '<=', $booking_data['check_in'])->where('from_date', '>=', $booking_data['check_out'])->groupBy('room_category_id')->get();
-        dd($bookings);
+        $bookings = Booking::whereIn('room_category_id', $room_category_id)->where('to_date', '<=', $booking_data['check_in'])->where('from_date', '>=', $booking_data['check_out'])->pluck('room_id', 'room_category_id');
 
-        $available_rooms = Rooms::select('room_categories.*', DB::raw('COUNT(room_categories.id) as no_of_rooms'), 'files.path', 'files.filename')->join('room_categories', 'rooms.room_category_id', 'room_categories.id')
-                            ->join('files', 'room_categories.id', 'files.element_id')
-                            ->where('files.type', 'room-category-thumb')
-                            ->whereNotIn('room_number', $bookings)
-                            ->groupBy('room_categories.id', 'files.path', 'files.filename')->get();
+        $total_rooms = Rooms::select('room_category_id', DB::raw('COUNT(rooms.id) as no_of_rooms'))->whereIn('room_category_id', $room_category_id)->groupBy('room_category_id')->get();
+        
+        if(count($bookings) == 0){
+            $result['success'] = 1;
+            $result['bookings'] = [];
+        }
+        else{
+            $result['success'] = 1;
+            $result['bookings'] = $bookings;
+        }
+        return $result;
+    }
+
+    function saveUser($request){
+        $user = new User();
+        $user->email = $request->email;
+        $user->password = randomPassword(8);
+        $user->mobile = $request->mobile;
+        $user->role_id = Role::where('name', 'Customer')->value('id');
+        $user->verified = 0;
+        $user->status = 1;
+        $user->created_by = Auth::user()->id;
+        $user->save();
+
+        return $user->id;
+    }
+
+
+    function saveBillingInfo($request, $user_id){
+        $booking_data = $request->session()->get('booking_data_temp');
+        $total_price = array_sum(array_column($booking_data['booking_data'], 'room_price'));
+
+        $billing = new Billing();
+        $billing->user_id = $user_id;
+        $billing->total_price = $total_price;
+        $billing->total_discount = 0;
+        $billing->paid_amount = 0;
+        $billing->due_amount = $total_price;
+        $billing->total_vat = 0;
+        $billing->price_with_vat = 0;
+        $billing->adjustment = 0;
+        $billing->final_price = $total_price;
+        $billing->created_by = Auth::user()->id;
+        $billing->payment_completed = 0;
+
+        $billing->save();
+
+        $biilingOtherInfo = new BiilingOtherInfo();
+        $biilingOtherInfo->billing_id = $billing->id;
+        $biilingOtherInfo->identity = $request->identity;
+        $biilingOtherInfo->identity_number = $request->identity;
+        $biilingOtherInfo->expire_date = $request->expire_date;
+        $biilingOtherInfo->dob = $request->dob;
+        $biilingOtherInfo->nationality = $request->nationality;
+        $biilingOtherInfo->created_by = Auth::user()->id;
+
+        $biilingOtherInfo->save();
+
+        return $billing->id;
+    }
+
+
+    function validateTotalPrice($booking_data){
+        $room_category_id = array_column($booking_data['booking_data'], 'room_category_id');
+        $total_price = 0;
+        $room_categories = RoomCategory::whereIn('id', $room_category_id)->pluck('price', 'id');
+        foreach($room_categories as $key=>$value){
+            $total_price += $value * $booking_data['no_of_nights'] * $booking_data['booking_data'][$key]['no_of_rooms'];
+        }
+
+        $total_price_temp = array_sum(array_column($booking_data['booking_data'], 'room_price'));
+        if($total_price_temp == $total_price){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+
+
+    function saveBooking($request, $user_id, $billing_id, $bookings){
+        $booking_arr[] = [];
+        $booking_data = $request->session()->get('booking_data_temp');
+        $booked_rooms = array_values($bookings);
+        if(count($booked_rooms) == 0){
+            $i = 0;
+            foreach ($booking_data['booking_data'] as $key => $value){
+                $rooms = Rooms::select('room_category_id', 'room_number')->where('room_category_id', $value['room_category_id'])->whereNotIn('room_number', $booked_rooms)->take($value['no_of_rooms'])->orderBy('room_number', 'ASC')->get();
+                foreach($rooms as $key_room => $room){
+                    $booking_arr[$i]['user_id'] = $user_id;
+                    $booking_arr[$i]['room_id'] = $room->room_number;
+                    $booking_arr[$i]['from_date'] = $booking_data['check_in'];
+                    $booking_arr[$i]['to_date'] = $booking_data['check_out'];
+                    $booking_arr[$i]['people_adult'] = $value['people_adult'][$key_room];
+                    $booking_arr[$i]['people_child'] = $value['people_child'][$key_room];
+                    $booking_arr[$i]['unit_price'] = $user_id;
+                    $booking_arr[$i]['discount'] = 0;
+                    $booking_arr[$i]['total_price'] = 0;
+                    $booking_arr[$i]['vat'] = 0;
+                    $booking_arr[$i]['created_by'] = Auth::user()->id;;
+                    $booking_arr[$i]['room_category_id'] = $room->room_category_id;
+                    $booking_arr[$i]['created_at'] = date('Y-m-d H:i:s');
+                    $i++;
+                }
+            }
+            Booking::insert($booking_arr);
+        }
     }
 }
 ?>
