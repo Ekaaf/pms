@@ -20,19 +20,18 @@ return new class extends Migration
             $table->timestamp('from_date');
             $table->timestamp('to_date');
             $table->decimal('people_adult', 1, 0)->nullable();
-            $table->decimal('people_children', 1, 0)->nullable();
+            $table->decimal('people_child', 1, 0)->nullable();
             $table->timestamp('checked_in_time')->nullable();
             $table->timestamp('checked_out_time')->nullable();
             $table->decimal('unit_price', 10, 0)->nullable();
             $table->decimal('discount', 10, 0)->nullable();
             $table->decimal('total_price', 10, 0)->nullable();
-            $table->decimal('paid_amount', 10, 0)->nullable();
-            $table->decimal('due_amount', 10, 0)->nullable();
             $table->decimal('vat', 10, 0)->nullable();
             $table->decimal('created_by', 10, 0)->nullable();
             $table->timestamps();
             $table->integer('billing_id')->nullable();
             $table->string('booking_type', 20)->nullable();
+            $table->integer('room_category_id')->nullable();
         });
     }
 

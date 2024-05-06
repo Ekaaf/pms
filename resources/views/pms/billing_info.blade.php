@@ -155,7 +155,7 @@
                                     <div class="col-xxl-4 col-md-6">
                                         <div>
                                             <label for="basiInput" class="form-label">Zip/Post Code</label>
-                                            <input type="text" class="form-control" id="zip_code" name="zip_code" placeholder="Enter Zip/Post Code">
+                                            <input type="text" class="form-control" id="postal_code" name="postal_code" placeholder="Enter Zip/Post Code">
                                         </div>
                                     </div>
                                     <div class="col-xxl-4 col-md-6">
@@ -302,7 +302,7 @@
                 mobile: "required",
                 address: "required",
                 city: "required",
-                zip_code: "required",
+                postal_code: "required",
                 state: "required",
                 country: "required",
                 identity: "required",

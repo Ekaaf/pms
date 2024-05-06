@@ -113,6 +113,7 @@
 <script src="{{asset('assets/js/pages/form-input-spin.init.js')}}"></script>
 <script>
     $( document ).ready(function() {
+        searchRooms();
     });
     var room_categories = [];
     var check_in = '';
@@ -121,8 +122,10 @@
         $("#available_room_div").hide();
         $("#loading_div").show();
 
-        check_in = $("#check_in").val();
-        check_out = $("#check_out").val();
+        // check_in = $("#check_in").val();
+        // check_out = $("#check_out").val();
+        check_in = '2024-05-06';
+        check_out = '2024-05-07';
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -208,9 +211,10 @@
 
     function decrement(element, id){
         var value = $(element).next().val();
+        
         if(value > 1){
             $(element).next().val(--value);
-            $(element).parent().parent().find($('.people-count').eq(value)).remove();
+            $($(element).parent().parent().find($('.people-count'))).eq(value).remove();
             $(element).parent().parent().next().show();
         }
         else if(value == 1){
@@ -226,7 +230,6 @@
             room_categories = room_categories.filter(function(elem){
                return elem != id; 
             });
-            console.log(room_categories);
             finalPrice();
         }
     }

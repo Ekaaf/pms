@@ -30,6 +30,7 @@ use App\Models\Booking;
 use App\Models\Billing;
 use App\Models\BiilingOtherInfo;
 use App\Models\RoomCategory;
+use App\Models\UserInfo;
 
 class MenuService{
 
@@ -198,8 +199,19 @@ class MenuService{
     public function checkRoomAvailability($booking_data){
         $result = [];
         $room_category_id = array_column($booking_data['booking_data'], 'room_category_id');
-        $bookings = Booking::whereIn('room_category_id', $room_category_id)->where('to_date', '<=', $booking_data['check_in'])->where('from_date', '>=', $booking_data['check_out'])->pluck('room_id', 'room_category_id');
+        $check_in = $booking_data['check_in'];
+        $check_out = $booking_data['check_out'];
 
+        $bookings = Booking::whereIn('room_category_id', $room_category_id)->where(function ($query) use ($check_in, $check_out) {
+            $query->where('from_date', '<=', $check_in)
+                  ->where('to_date', '>', $check_in);
+        })->orWhere(function ($query) use ($check_in, $check_out) {
+            $query->where('from_date', '<', $check_out)
+                  ->where('to_date', '>=', $check_out);
+        })->pluck('room_id');
+        
+        // dd($bookings);
+        
         $total_rooms = Rooms::select('room_category_id', DB::raw('COUNT(rooms.id) as no_of_rooms'))->whereIn('room_category_id', $room_category_id)->groupBy('room_category_id')->get();
         
         if(count($bookings) == 0){
@@ -223,6 +235,19 @@ class MenuService{
         $user->status = 1;
         $user->created_by = Auth::user()->id;
         $user->save();
+
+
+        $userInfo = new UserInfo();
+        $userInfo->user_id = $user->id;
+        $userInfo->title = $request->title;
+        $userInfo->first_name = $request->first_name;
+        $userInfo->last_name = $request->last_name;
+        $userInfo->address = $request->address;
+        $userInfo->postal_code = $request->postal_code;
+        $userInfo->city = $request->city;
+        $userInfo->country = $request->country;
+        $userInfo->created_by = Auth::user()->id;
+        $userInfo->save();
 
         return $user->id;
     }
@@ -283,30 +308,31 @@ class MenuService{
     function saveBooking($request, $user_id, $billing_id, $bookings){
         $booking_arr[] = [];
         $booking_data = $request->session()->get('booking_data_temp');
-        $booked_rooms = array_values($bookings);
-        if(count($booked_rooms) == 0){
-            $i = 0;
-            foreach ($booking_data['booking_data'] as $key => $value){
-                $rooms = Rooms::select('room_category_id', 'room_number')->where('room_category_id', $value['room_category_id'])->whereNotIn('room_number', $booked_rooms)->take($value['no_of_rooms'])->orderBy('room_number', 'ASC')->get();
-                foreach($rooms as $key_room => $room){
-                    $booking_arr[$i]['user_id'] = $user_id;
-                    $booking_arr[$i]['room_id'] = $room->room_number;
-                    $booking_arr[$i]['from_date'] = $booking_data['check_in'];
-                    $booking_arr[$i]['to_date'] = $booking_data['check_out'];
-                    $booking_arr[$i]['people_adult'] = $value['people_adult'][$key_room];
-                    $booking_arr[$i]['people_child'] = $value['people_child'][$key_room];
-                    $booking_arr[$i]['unit_price'] = $user_id;
-                    $booking_arr[$i]['discount'] = 0;
-                    $booking_arr[$i]['total_price'] = 0;
-                    $booking_arr[$i]['vat'] = 0;
-                    $booking_arr[$i]['created_by'] = Auth::user()->id;;
-                    $booking_arr[$i]['room_category_id'] = $room->room_category_id;
-                    $booking_arr[$i]['created_at'] = date('Y-m-d H:i:s');
-                    $i++;
-                }
+        // if(count($booked_rooms) == 0){
+        $i = 0;
+        foreach ($booking_data['booking_data'] as $key => $value){
+            // $booked_rooms = array_column($bookings[$value['room_category_id']]->toArray(), 'room_id');
+            dd($bookings[$value['room_category_id']]);
+            $rooms = Rooms::select('room_category_id', 'room_number')->where('room_category_id', $value['room_category_id'])->whereNotIn('room_number', $booked_rooms)->take($value['no_of_rooms'])->orderBy('room_number', 'ASC')->get();
+            foreach($rooms as $key_room => $room){
+                $booking_arr[$i]['user_id'] = $user_id;
+                $booking_arr[$i]['room_id'] = $room->room_number;
+                $booking_arr[$i]['from_date'] = $booking_data['check_in'];
+                $booking_arr[$i]['to_date'] = $booking_data['check_out'];
+                $booking_arr[$i]['people_adult'] = $value['people_adult'][$key_room];
+                $booking_arr[$i]['people_child'] = $value['people_child'][$key_room];
+                $booking_arr[$i]['unit_price'] = $user_id;
+                $booking_arr[$i]['discount'] = 0;
+                $booking_arr[$i]['total_price'] = 0;
+                $booking_arr[$i]['vat'] = 0;
+                $booking_arr[$i]['created_by'] = Auth::user()->id;;
+                $booking_arr[$i]['room_category_id'] = $room->room_category_id;
+                $booking_arr[$i]['created_at'] = date('Y-m-d H:i:s');
+                $i++;
             }
-            Booking::insert($booking_arr);
         }
+        Booking::insert($booking_arr);
+        // }
     }
 }
 ?>

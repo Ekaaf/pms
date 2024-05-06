@@ -13,16 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('menu_methods', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
-            $table->smallInteger('menu_id');
-            $table->smallInteger('type')->nullable();
-            $table->string('path', 500)->nullable();
-            $table->string('method_name', 500)->nullable();
-            $table->smallInteger('default')->default(0);
-            $table->integer('created_by')->nullable();
+            $table->string('email', 100);
+            $table->string('password', 100);
+            $table->string('mobile', 25)->nullable();
+            $table->smallInteger('role_id')->nullable();
+            $table->smallInteger('verified')->nullable()->default(0);
+            $table->smallInteger('status')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->nullable();
+            $table->integer('created_by')->nullable();
         });
     }
 
@@ -33,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('menu_methods');
+        Schema::dropIfExists('users');
     }
 };

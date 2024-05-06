@@ -13,15 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('payment_records', function (Blueprint $table) {
+        Schema::create('biiling_other_info', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('billing_id');
-            $table->string('payment_medium', 30);
-            $table->decimal('amount', 10, 0);
-            $table->decimal('deduction', 10, 0);
-            $table->integer('paid_by');
+            $table->string('identity', 20)->nullable();
+            $table->date('dob')->nullable();
+            $table->string('nationality', 30)->nullable();
+            $table->string('estimated_arrival_time', 20)->nullable();
+            $table->integer('created_by');
             $table->timestamp('created_at');
             $table->timestamp('updated_at')->nullable();
+            $table->date('expire_date')->nullable();
+            $table->string('identity_number', 100)->nullable();
         });
     }
 
@@ -32,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payment_records');
+        Schema::dropIfExists('biiling_other_info');
     }
 };

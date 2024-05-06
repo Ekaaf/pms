@@ -23,8 +23,15 @@ class ReservationController extends Controller
         $request->session()->forget('booking_data_temp');
         $check_in = $request->check_in;
         $check_out = $request->check_out;
-        $bookings = Booking::where('to_date', '<=', $check_in)->where('from_date', '>=', $check_out)->pluck('room_id');
-
+        // $bookings = Booking::where('to_date', '<=', $check_in)->where('from_date', '>=', $check_out)->pluck('room_id');
+        // $bookings = Booking::where('from_date', '>=', $check_in)->where('from_date', '<', $check_out)->pluck('room_id');
+        $bookings = Booking::where(function ($query) use ($check_in, $check_out) {
+            $query->where('from_date', '<=', $check_in)
+                  ->where('to_date', '>', $check_in);
+        })->orWhere(function ($query) use ($check_in, $check_out) {
+            $query->where('from_date', '<', $check_out)
+                  ->where('to_date', '>=', $check_out);
+        })->pluck('room_id');
         $available_rooms = Rooms::select('room_categories.*', DB::raw('COUNT(room_categories.id) as no_of_rooms'), 'files.path', 'files.filename')->join('room_categories', 'rooms.room_category_id', 'room_categories.id')
                             ->join('files', 'room_categories.id', 'files.element_id')
                             ->where('files.type', 'room-category-thumb')
