@@ -64,11 +64,86 @@
                                         <label for="nameInput" class="form-label">Select Existing User</label>
                                     </div>
                                     <div class="col-lg-10">
-                                        <select class="form-control">
+                                        <select class="form-control" id="user_id" name="user_id" onchange="getUserInfo();">
                                             <option value>Select</option>
-                                            <option value='1'>1</option>
-                                            <option value='2'>2</option>
+                                            @foreach($customers as $customer)
+                                                <option value='{{$customer->id}}'>{{$customer->email}}</option>
+                                            @endforeach
                                         </select>
+                                    </div>
+
+                                    <div class="row gy-4 mt-5" id="existing_user_info_div" style="display:none;">
+                                        <h4 style="color:#8c68cd;">User Basic Information</h4>
+                                        <div class="col-xxl-2 col-md-2">
+                                            <div>
+                                                <label for="basiInput" class="form-label">Title: </label>
+                                                <span id="title_text"></span>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-xxl-5 col-md-5">
+                                            <div>
+                                                <label for="basiInput" class="form-label">First Name: </label>
+                                                <span id="first_name_text"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-5 col-md-5">
+                                            <div>
+                                                <label for="basiInput" class="form-label">Last Name: </label>
+                                                <span id="last_name_text"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-2 col-md-2">
+                                            <div>
+                                                <label for="basiInput" class="form-label">Gender: </label>
+                                                <span id="gender_text"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-5 col-md-5">
+                                            <div>
+                                                <label for="basiInput" class="form-label">Email: </label>
+                                                <span id="email_text"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-5 col-md-5">
+                                            <div>
+                                                <label class="form-label">Mobile Number: </label>
+                                                <span id="mobile_text"></span>
+                                            </div>
+                                        </div>
+
+                                        <hr>
+                                        <div class="col-xxl-8 col-md-8">
+                                            <div>
+                                                <label for="basiInput" class="form-label">Address: </label>
+                                                <span id="address_text"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-4 col-md-6">
+                                            <div>
+                                                <label for="basiInput" class="form-label">City: </label>
+                                                <span id="city_text"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-4 col-md-6">
+                                            <div>
+                                                <label for="basiInput" class="form-label">Zip/Post Code: </label>
+                                                <span id="postal_code_text"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-4 col-md-6">
+                                            <div>
+                                                <label for="basiInput" class="form-label">State: </label>
+                                                <span id="state_text"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-4 col-md-6">
+                                            <div>
+                                                <label for="basiInput" class="form-label">Country: </label>
+                                                <span id="country_text"></span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -294,6 +369,13 @@
             rules: {
                 user_type: "required",
                 title: "required",
+                // title: {
+                //     required: function() {
+                //         if($('input[name="user_type"]:checked').val() == 'new_user'){
+                //             return 1;
+                //         }
+                //     }
+                // },
                 first_name: "required",
                 last_name: "required",
                 gender: "required",
@@ -337,16 +419,49 @@
 
 
     function showBookingDiv(type){
+        $("#identity_div").show();
+        $("#existing_user_info_div").hide();
         if(type == 'existing_user'){
             $("#existing_user_div").show();
             $("#new_user_div").hide();
-            $("#identity_div").hide();
         }
         else{
             $("#existing_user_div").hide();
             $("#new_user_div").show();
-            $("#identity_div").show();
+            
         }
+    }
+
+
+    function getUserInfo(){
+        var user_id = $("#user_id").val();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type: 'POST',
+            url: 'get-user-info',
+            data: {
+              user_id : user_id
+            },
+            dataType: 'json',
+        })
+        .done(function (data) {
+            $("#title_text").text(data.title);
+            $("#first_name_text").text(data.first_name);
+            $("#last_name_text").text(data.last_name);
+            $("#email_text").text(data.email);
+            $("#gender_text").text(data.gender);
+            $("#mobile_text").text(data.mobile);
+            $("#address_text").text(data.address);
+            $("#city_text").text(data.city);
+            $("#state_text").text(data.state);
+            $("#country_text").text(data.country);
+            $("#postal_code_text").text(data.postal_code);
+            $("#existing_user_info_div").show();
+        });
     }
 </script>
 @endsection

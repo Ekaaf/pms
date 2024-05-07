@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Rooms;
 use App\Models\Booking;
+use App\Models\User;
+use App\Models\Role;
 use Illuminate\Support\Facades\DB;
 use App\Service\MenuService;
 
@@ -61,8 +63,8 @@ class ReservationController extends Controller
 
     public function billingInfo(Request $request){
         $booking_data_temp = $request->session()->get('booking_data_temp');
-        // dd($booking_data_temp);
-        return view('pms.billing_info')->with('booking_data_temp', $booking_data_temp);
+        $customers = User::where('role_id', Role::where('name', 'Customer')->value('id'))->get();
+        return view('pms.billing_info')->with('booking_data_temp', $booking_data_temp)->with('customers', $customers);
     }
 
 
@@ -78,7 +80,12 @@ class ReservationController extends Controller
 
                     $valid_price = $this->menuService->validateTotalPrice($booking_data);
                     if($valid_price){
-                        $user_id = $this->menuService->saveUser($request);
+                        if($request->user_type != 'existing_user'){
+                            $user_id = $this->menuService->saveUser($request);
+                        }
+                        else{
+                            $user_id = $request->user_id;
+                        }
                         $billing_id = $this->menuService->saveBillingInfo($request, $user_id);
                         $this->menuService->saveBooking($request, $user_id, $billing_id, $bookings);
                         DB::commit();
@@ -105,5 +112,10 @@ class ReservationController extends Controller
             exit;
         }
         
+    }
+
+    public function getUserInfo(Request $request){
+        $user = User::join('user_info', 'users.id', 'user_info.user_id')->where('users.id', $request->user_id)->first();
+        return response()->json($user);
     }
 }

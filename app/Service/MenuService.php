@@ -230,7 +230,12 @@ class MenuService{
         $user->email = $request->email;
         $user->password = randomPassword(8);
         $user->mobile = $request->mobile;
-        $user->role_id = Role::where('name', 'Customer')->value('id');
+        if($request->user_type == 'new_user'){
+            $user->role_id = Role::where('name', 'Customer')->value('id');
+        }
+        else if($request->user_type == 'guest_user'){
+            $user->role_id = Role::where('name', 'Guest')->value('id');
+        }
         $user->verified = 0;
         $user->status = 1;
         $user->created_by = Auth::user()->id;
@@ -246,6 +251,7 @@ class MenuService{
         $userInfo->postal_code = $request->postal_code;
         $userInfo->city = $request->city;
         $userInfo->country = $request->country;
+        $userInfo->gender = $request->gender;
         $userInfo->created_by = Auth::user()->id;
         $userInfo->save();
 
@@ -312,7 +318,7 @@ class MenuService{
         $i = 0;
         foreach ($booking_data['booking_data'] as $key => $value){
             // $booked_rooms = array_column($bookings[$value['room_category_id']]->toArray(), 'room_id');
-            dd($bookings[$value['room_category_id']]);
+            $booked_rooms = $bookings->toArray();
             $rooms = Rooms::select('room_category_id', 'room_number')->where('room_category_id', $value['room_category_id'])->whereNotIn('room_number', $booked_rooms)->take($value['no_of_rooms'])->orderBy('room_number', 'ASC')->get();
             foreach($rooms as $key_room => $room){
                 $booking_arr[$i]['user_id'] = $user_id;
