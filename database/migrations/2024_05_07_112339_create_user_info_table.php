@@ -26,6 +26,7 @@ return new class extends Migration
             $table->integer('created_by');
             $table->timestamp('created_at');
             $table->timestamp('updated_at')->nullable();
+            $table->string('gender', 10)->nullable();
         });
     }
 
