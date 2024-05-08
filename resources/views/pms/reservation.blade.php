@@ -122,10 +122,10 @@
         $("#available_room_div").hide();
         $("#loading_div").show();
 
-        // check_in = $("#check_in").val();
-        // check_out = $("#check_out").val();
-        check_in = '2024-05-06';
-        check_out = '2024-05-07';
+        check_in = $("#check_in").val();
+        check_out = $("#check_out").val();
+        check_in = '2024-05-09';
+        check_out = '2024-05-11';
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -141,11 +141,32 @@
             dataType: 'json',
         })
         .done(function (data) {
+            var dateList = getdateList(check_in, check_out);
+            var available_rooms = data.available_rooms;
+            var room_rent = data.room_category_rent_arr;
+            var length = dateList.length;
             
             $("#room_list_div").empty();
             $("#booked_room").empty();
             var html = "";
-            $.each(data, function(i, item) {
+            $.each(available_rooms, function(i, item) {
+                var room_price_rent = 0;
+                
+
+                if(room_rent[item.id]){
+                    for(var i=0; i<length; i++){
+                        if(room_rent[item.id][dateList[i]]){
+                            room_price_rent += parseInt(room_rent[item.id][dateList[i]].net_price);
+                        }
+                        else{
+                            room_price_rent +=parseInt(item.price)
+                        }
+                    }
+                }
+                else{
+                    room_price_rent += parseInt(item.price*length)
+                }
+                console.log(room_price_rent)
                 html += '<div class="card">'+
                             '<div class="card-body">'+
                                 '<div class="row me-1">'+
@@ -161,8 +182,8 @@
                                                 'Room Rates Exclusive of Ser. Chg. & VAT'+
                                             '</div>'+
                                             '<div class="col-sm-4 p-2 border rounded">'+
-                                                '<b style="color:#8c68cd;">From BDT '+item.price+'</b>'+
-                                                '<br>Per Room/Night'+
+                                                '<b style="color:#8c68cd;">From BDT '+room_price_rent+'</b>'+
+                                                '<br>Price for '+length+' Night'+
                                             '</div>'+
                                         '</div>'+
                                         '<button class="btn btn-primary btn-border mt-3 me-1 float-sm-end" onclick="showInputPlus(this, '+item.people_adult+', '+item.people_child+','+item.no_of_rooms+', '+item.id+')">'+
@@ -174,7 +195,7 @@
                                             '<button type="button" class="plus" onclick="increment(this, '+item.people_adult+', '+item.people_child+', '+item.no_of_rooms+', '+item.id+');">+</button>'+
                                         '</div>'+
                                     '</div>'+
-                                    '<button class="btn btn-success btn-border mt-3 me-1 float-sm-end confirm-button" style="display:none;" onclick="confirmRoom(this, '+item.id+', \''+item.category+'\', '+item.people_adult+', '+item.people_child+', '+item.price+');">'+
+                                    '<button class="btn btn-success btn-border mt-3 me-1 float-sm-end confirm-button" style="display:none;" onclick="confirmRoom(this, '+item.id+', \''+item.category+'\', '+item.people_adult+', '+item.people_child+', '+room_price_rent+');">'+
                                             'Confirm'+
                                     '</button>'+
                                     '</div>'+
@@ -189,6 +210,23 @@
             $("#no_of_days").text((new Date(new Date(check_out) - new Date(check_in)))/1000/60/60/24);
         });
     }
+
+    function getdateList(check_in, check_out){
+        var dateList = [];
+        check_in = new Date(check_in);
+        check_out = new Date(check_out);
+        console.log(check_out)
+        for(check_in = check_in; check_in <check_out; check_in.setDate(check_in.getDate() + 1)){
+            var date = check_in.getFullYear()+'-'+pad(check_in.getMonth()+1, 2)+'-'+pad(check_in.getDate(), 2);
+            dateList.push(date);
+        }
+        return dateList;
+    }
+    function pad(str, max) {
+      str = str.toString();
+      return str.length < max ? pad("0" + str, max) : str;
+    }
+
 
 
     function showInputPlus(element, people_adult, people_child, no_of_rooms, id){
@@ -220,7 +258,7 @@
         else if(value == 1){
             $(element).next().val(--value);
             $(element).parent().hide();
-            $(element).parent().parent().find($('.people-count').eq(0)).remove();
+            $($(element).parent().parent().find($('.people-count'))).eq(0).remove();
             $(element).parent().prev().show();
             $("#"+id).remove();
             $(element).parent().parent().next().hide();
@@ -282,11 +320,22 @@
             alert('Please select number of children in each room');
             return false;
         }
+
+        var total_people_adult = 0;
+        for (var i = 0; i < people_adult.length; i++) {
+            total_people_adult += parseInt(people_adult[i]);
+        }
+        var total_people_child = 0;
+        for (var i = 0; i < people_child.length; i++) {
+            total_people_child += parseInt(people_child[i]);
+        }
+
+
         $(element).hide();
         var html = "";
         html += '<b style="color:#495057;margin-right: 10%;">'+category+':</b>'+ 
-                    '<span>'+room_people_adult*num_of_rooms+' Adults '+room_people_child*num_of_rooms+' Children ('+num_of_rooms+' Room)</span>'+
-                    '<div class="w-100 text-end" style="color: #8c68cd"> BDT&nbsp;<span class="room-rent">'+room_price*$("#no_of_days").text()*num_of_rooms +'</span></div>';
+                    '<span>'+total_people_adult+' Adults '+total_people_child+' Children ('+num_of_rooms+' Room)</span>'+
+                    '<div class="w-100 text-end" style="color: #8c68cd"> BDT&nbsp;<span class="room-rent">'+room_price*num_of_rooms +'</span></div>';
 
         if($('#'+id).length == 0){
             $("#booked_room").append('<div id="'+id+'"></div>');

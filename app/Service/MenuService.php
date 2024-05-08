@@ -317,8 +317,13 @@ class MenuService{
         // if(count($booked_rooms) == 0){
         $i = 0;
         foreach ($booking_data['booking_data'] as $key => $value){
-            // $booked_rooms = array_column($bookings[$value['room_category_id']]->toArray(), 'room_id');
-            $booked_rooms = $bookings->toArray();
+            if(count($bookings) == 0){
+                $booked_rooms = [];
+            }
+            else{
+                $booked_rooms = $bookings->toArray();
+            }
+            
             $rooms = Rooms::select('room_category_id', 'room_number')->where('room_category_id', $value['room_category_id'])->whereNotIn('room_number', $booked_rooms)->take($value['no_of_rooms'])->orderBy('room_number', 'ASC')->get();
             foreach($rooms as $key_room => $room){
                 $booking_arr[$i]['user_id'] = $user_id;

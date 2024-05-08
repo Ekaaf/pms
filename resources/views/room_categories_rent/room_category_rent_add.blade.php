@@ -54,7 +54,7 @@
                                     <label for="nameInput" class="form-label">From Date</label>
                                 </div>
                                 <div class="col-lg-10">
-                                    <input type="text" data-provider="flatpickr" data-date-format="d M Y" class="form-control <?php if($errors->has('from_date')) echo 'element-border';?>" id="from_date" name="from_date" value="{{old('from_date')}}" required>
+                                    <input type="date" data-provider="flatpickr" data-date-format="d M Y" class="form-control <?php if($errors->has('from_date')) echo 'element-border';?>" id="from_date" name="from_date" value="{{old('from_date')}}" required>
                                     @if($errors->has('from_date'))
                                         <div class="input-error">{{ $errors->first('from_date') }}</div>
                                     @endif
@@ -67,7 +67,7 @@
                                     <label for="nameInput" class="form-label">To Date</label>
                                 </div>
                                 <div class="col-lg-10">
-                                    <input type="text" data-provider="flatpickr" data-date-format="d M Y" class="form-control <?php if($errors->has('to_date')) echo 'element-border';?>" id="to_date" name="to_date" value="{{old('to_date')}}" required>
+                                    <input type="date" data-provider="flatpickr" data-date-format="d M Y" class="form-control <?php if($errors->has('to_date')) echo 'element-border';?>" id="to_date" name="to_date" value="{{old('to_date')}}" required>
                                     @if($errors->has('to_date'))
                                         <div class="input-error">{{ $errors->first('to_date') }}</div>
                                     @endif

@@ -9,6 +9,7 @@ use App\Models\Rooms;
 use App\Models\Booking;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\RoomCategoryRent;
 use Illuminate\Support\Facades\DB;
 use App\Service\MenuService;
 
@@ -25,8 +26,6 @@ class ReservationController extends Controller
         $request->session()->forget('booking_data_temp');
         $check_in = $request->check_in;
         $check_out = $request->check_out;
-        // $bookings = Booking::where('to_date', '<=', $check_in)->where('from_date', '>=', $check_out)->pluck('room_id');
-        // $bookings = Booking::where('from_date', '>=', $check_in)->where('from_date', '<', $check_out)->pluck('room_id');
         $bookings = Booking::where(function ($query) use ($check_in, $check_out) {
             $query->where('from_date', '<=', $check_in)
                   ->where('to_date', '>', $check_in);
@@ -34,12 +33,21 @@ class ReservationController extends Controller
             $query->where('from_date', '<', $check_out)
                   ->where('to_date', '>=', $check_out);
         })->pluck('room_id');
-        $available_rooms = Rooms::select('room_categories.*', DB::raw('COUNT(room_categories.id) as no_of_rooms'), 'files.path', 'files.filename')->join('room_categories', 'rooms.room_category_id', 'room_categories.id')
+        $data['available_rooms'] = Rooms::select('room_categories.*', DB::raw('COUNT(room_categories.id) as no_of_rooms'), 'files.path', 'files.filename')->join('room_categories', 'rooms.room_category_id', 'room_categories.id')
                             ->join('files', 'room_categories.id', 'files.element_id')
                             ->where('files.type', 'room-category-thumb')
                             ->whereNotIn('room_number', $bookings)
                             ->groupBy('room_categories.id', 'files.path', 'files.filename')->get();
-        return response()->json($available_rooms);
+
+        $room_categories_id = array_column($data['available_rooms']->toArray(), 'id');
+        $room_category_rents = RoomCategoryRent::whereIn('room_category_id', $room_categories_id)->where('rent_date', '>=', $check_in)->where('rent_date', '<', $check_out)->get();
+        $room_category_rent_arr = [];
+        foreach($room_category_rents as $rent){
+            $room_category_rent_arr[$rent->room_category_id][$rent->rent_date] = ['price'=>$rent->price, 'discount'=>$rent->discount, 'net_price'=>$rent->net_price];
+        }
+        // $data['room_category_rent_arr'] = json_encode($room_category_rent_arr);
+        $data['room_category_rent_arr'] = $room_category_rent_arr ;
+        return response()->json($data);
     }
 
 

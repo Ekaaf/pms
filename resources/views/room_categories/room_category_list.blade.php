@@ -52,6 +52,7 @@
                                     <th>Size</th>
                                     <th>No. of People</th>
                                     <th>Bed</th>
+                                    <th>Room Price</th>
                                     <th>Check In</th>
                                     <th>Check Out</th>
                                     @if($editaction || $deleteaction || $viewaction)

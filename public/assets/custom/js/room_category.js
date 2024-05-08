@@ -27,6 +27,11 @@ function getAllroomCategories(){
           }
         },
         { "data": "bed" },
+        { "data": "price",
+          "render": function ( data, type, full, meta ) {
+            return 'BDT '+data;
+          }
+        },
         { "data": "check_in" },
         { "data": "check_out" }
     ];

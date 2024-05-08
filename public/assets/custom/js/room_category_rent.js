@@ -14,8 +14,24 @@ function getAllroomCategoriesRent(){
         { "data": "0" },
         { "data": "category" },
         { "data": "rent_date" },
-        { "data": "price" },
-        { "data": "discount" }
+        {
+            "data": "price",
+            "render": function ( data, type, full, meta ) {
+                return 'BDT '+data;
+            }
+        },
+        {
+            "data": "discount",
+            "render": function ( data, type, full, meta ) {
+                return 'BDT '+data;
+            }
+        },
+        {
+            "data": "net_price",
+            "render": function ( data, type, full, meta ) {
+                return 'BDT '+data;
+            }
+        }
     ];
 
     if(editaction || deleteaction){

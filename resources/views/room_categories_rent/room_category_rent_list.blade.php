@@ -29,7 +29,7 @@
         
         @if(checkButtonAccess('admin/room-category-rent/add'))
         <div class="text-end">
-            <a href="{{URL::to('admin/room-category/add')}}" class="btn btn-success btn-border">
+            <a href="{{URL::to('admin/room-category-rent/add')}}" class="btn btn-success btn-border">
                 <i class="bx bx-add-to-queue"></i>&nbsp
                 Add Booking Price
             </a>
@@ -51,6 +51,7 @@
                                     <th>Booking Date</th>
                                     <th>Price</th>
                                     <th>Discount</th>
+                                    <th>Net Price</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>

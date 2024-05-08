@@ -256,7 +256,7 @@
                                     <div class="col-xxl-3 col-md-6">
                                         <div>
                                             <label for="basiInput" class="form-label">Identity</label>
-                                            <select class="form-control" id="identity" name="identity">
+                                            <select class="form-control" id="identity" name="identity" onchange="showExpireDiv();">
                                                 <option value>Select</option>
                                                 <option value='passport'>Passport</option>
                                                 <option value='driving_license'>Driving License</option>
@@ -272,7 +272,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-xxl-3 col-md-6">
+                                    <div class="col-xxl-3 col-md-6" id="expire_date_div">
                                         <div>
                                             <label for="basiInput" class="form-label">Expiry Date</label>
                                             <input type="date" class="form-control" id="expire_date" name="expire_date" placeholder="Enter Number">
@@ -462,6 +462,15 @@
             $("#postal_code_text").text(data.postal_code);
             $("#existing_user_info_div").show();
         });
+    }
+
+    function showExpireDiv(){
+        if($("#identity").val() == 'nid'){
+            $("#expire_date_div").hide();
+        }
+        else{
+            $("#expire_date_div").show();
+        }
     }
 </script>
 @endsection

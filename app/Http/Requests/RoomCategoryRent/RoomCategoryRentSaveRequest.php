@@ -23,8 +23,8 @@ class RoomCategoryRentSaveRequest extends FormRequest
     {
         return [
             'room_category_id' => 'required',
-            'from_date'    => 'required|date_format:d M Y|after:today',
-            'to_date' => 'required|date_format:d M Y|after_or_equal:from_date',
+            'from_date'    => 'required|date_format:Y-m-d|after:today',
+            'to_date' => 'required|date_format:Y-m-d|after_or_equal:from_date',
             'price' => 'required|numeric',
             'discount' => 'required|numeric'
         ];

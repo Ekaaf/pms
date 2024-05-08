@@ -120,6 +120,8 @@ class RoomCategoriesController extends Controller
 
             array( 'db' => 'bed', 'dt' => 'bed' ),
 
+            array( 'db' => 'price', 'dt' => 'price' ),
+
             array( 'db' => 'check_in', 'dt' => 'check_in' ),
 
             array( 'db' => 'check_out', 'dt' => 'check_out' )
@@ -269,6 +271,7 @@ class RoomCategoriesController extends Controller
             $rents[$i]['rent_date'] = $date->format("Y-m-d");
             $rents[$i]['price'] = $request->price;
             $rents[$i]['discount'] = $request->discount;
+            $rents[$i]['net_price'] = $request->price - $request->discount;
             $rents[$i]['created_by'] = Auth::user()->id;
             $rents[$i]['created_at'] = date('Y-m-d H:i:s');
             $i++;
@@ -306,7 +309,7 @@ class RoomCategoriesController extends Controller
     }
 
     public function getAllroomCategoriesRent(Request $request){
-        $table = "(SELECT room_categories_rent.id, room_categories_rent.room_category_id, room_categories_rent.rent_date, room_categories_rent.price, room_categories_rent.discount, room_categories.category FROM room_categories_rent inner join room_categories on room_categories_rent.room_category_id = room_categories.id) testtable";
+        $table = "(SELECT room_categories_rent.id, room_categories_rent.room_category_id, room_categories_rent.rent_date, room_categories_rent.price, room_categories_rent.discount, room_categories.category, room_categories_rent.net_price FROM room_categories_rent inner join room_categories on room_categories_rent.room_category_id = room_categories.id) testtable";
 
         $primaryKey = 'id';
         $columns = array(
@@ -327,6 +330,8 @@ class RoomCategoriesController extends Controller
             ),
 
             array( 'db' => 'price', 'dt' => 'price' ),
+
+            array( 'db' => 'net_price', 'dt' => 'net_price' ),
 
             array( 'db' => 'discount', 'dt' => 'discount' )
         );
