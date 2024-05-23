@@ -86,7 +86,7 @@ class ReservationController extends Controller
                 if($available['success'] == 1){
                     $bookings = $available['bookings'];
 
-                    $valid_price = $this->menuService->validateTotalPrice($booking_data);
+                    $valid_price = $this->menuService->validateTotalPrice($booking_data, $request);
                     if($valid_price){
                         if($request->user_type != 'existing_user'){
                             $user_id = $this->menuService->saveUser($request);

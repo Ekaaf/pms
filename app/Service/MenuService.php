@@ -30,6 +30,7 @@ use App\Models\Booking;
 use App\Models\Billing;
 use App\Models\BiilingOtherInfo;
 use App\Models\RoomCategory;
+use App\Models\RoomCategoryRent;
 use App\Models\UserInfo;
 
 class MenuService{
@@ -293,12 +294,22 @@ class MenuService{
     }
 
 
-    function validateTotalPrice($booking_data){
+    function validateTotalPrice($booking_data, $request){
         $room_category_id = array_column($booking_data['booking_data'], 'room_category_id');
         $total_price = 0;
         $room_categories = RoomCategory::whereIn('id', $room_category_id)->pluck('price', 'id');
+
+        $dates = $this->getDates($booking_data['check_in'], $booking_data['check_out']);
         foreach($room_categories as $key=>$value){
-            $total_price += $value * $booking_data['no_of_nights'] * $booking_data['booking_data'][$key]['no_of_rooms'];
+            $rent = RoomCategoryRent::where('room_category_id', $key)->whereIn('rent_date', $dates)->pluck('net_price')->toArray();
+            if(count($rent) >0){
+                $total_price += array_sum($rent) * $booking_data['booking_data'][$key]['no_of_rooms'];
+                $total_price += $value * ($booking_data['no_of_nights'] - count($rent)) * $booking_data['booking_data'][$key]['no_of_rooms'];
+            }
+            else{
+                $total_price += $value * $booking_data['no_of_nights'] * $booking_data['booking_data'][$key]['no_of_rooms'];
+            }
+            
         }
 
         $total_price_temp = array_sum(array_column($booking_data['booking_data'], 'room_price'));
@@ -310,6 +321,19 @@ class MenuService{
         }
     }
 
+    function getDates($check_in, $check_out){
+        $dates = [];
+        // $check_out = date('Y-m-d', strtotime('-1 day', strtotime($check_out)));
+        $period = new \DatePeriod(
+                         new DateTime($check_in),
+                         new \DateInterval('P1D'),
+                         new DateTime($check_out)
+                    );
+        foreach ($period as $key => $value) {
+            $dates[] = $value->format('Y-m-d');
+        }
+        return $dates;
+    }
 
     function saveBooking($request, $user_id, $billing_id, $bookings){
         $booking_arr[] = [];
