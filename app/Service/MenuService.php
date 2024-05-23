@@ -363,6 +363,7 @@ class MenuService{
                 $booking_arr[$i]['created_by'] = Auth::user()->id;;
                 $booking_arr[$i]['room_category_id'] = $room->room_category_id;
                 $booking_arr[$i]['created_at'] = date('Y-m-d H:i:s');
+                $booking_arr[$i]['billing_id'] = $billing_id;
                 $i++;
             }
         }

@@ -109,4 +109,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
 	Route::get('/billing-info',[ReservationController::class, 'billingInfo'])->name('Pms.BillingInfo');
 	Route::post('/confirm-booking',[ReservationController::class, 'confirmBooking'])->name('Pms.ConfirmBooking');
 	Route::post('/get-user-info',[ReservationController::class, 'getUserInfo'])->name('Pms.GetUserInfo');
+
+	// check in 
+	
 });

@@ -44,7 +44,7 @@
                                             </div>
                                         </div>
                                         <div class="col-xxl-3 col-md-6 d-flex">
-                                            <button type="button" class="btn btn-primary waves-effect waves-light align-self-end"  onclick="searchRooms();">Search</button>
+                                            <button type="button" class="btn btn-primary waves-effect waves-light align-self-end"  onclick="searchRooms(this);">Search</button>
                                         </div>
                                     </div>
                                 </form>
@@ -93,7 +93,7 @@
                                                         <b class="float-end" style="font-size: 20px;color: #8c68cd" id="final_total"></b>
                                                     </li>
                                                 </ul>
-                                                <button type="button" class="btn btn-primary waves-effect waves-light w-100" onclick="bookNow();">Book Now</button>
+                                                <button type="button" class="btn btn-primary waves-effect waves-light w-100" onclick="bookNow(this);">Book Now</button>
                                             </div>
                                         </div>
                                     </div>
@@ -118,7 +118,8 @@
     var room_categories = [];
     var check_in = '';
     var check_out = ''
-    function searchRooms(){
+    function searchRooms(element){
+        $(element).prop("disabled",true);
         $("#available_room_div").hide();
         $("#loading_div").show();
 
@@ -141,6 +142,7 @@
             dataType: 'json',
         })
         .done(function (data) {
+            $(element).prop("disabled",false);
             var dateList = getdateList(check_in, check_out);
             var available_rooms = data.available_rooms;
             var room_rent = data.room_category_rent_arr;
@@ -166,7 +168,6 @@
                 else{
                     room_price_rent += parseInt(item.price*length)
                 }
-                console.log(room_price_rent)
                 html += '<div class="card">'+
                             '<div class="card-body">'+
                                 '<div class="row me-1">'+
@@ -356,13 +357,14 @@
         $("#final_total").text("BDT "+final_price );
     }
 
-    function bookNow(){
+    function bookNow(element){
         $('.confirm-button').each(function(i, obj) {
             if(!$(this).is(":hidden")){
                 alert("Please confirm rooms");
                 return false;
             }
         });
+        $(element).prop("disabled",true);
         var booking_data = [];
         $.each(room_categories,function( key, value ) {
             var people_adult = $("select[name='people_adult_"+value+"[]']").map(function(){ if($(this).val()!='') return $(this).val();}).get();
@@ -386,7 +388,7 @@
             dataType: 'json',
         })
         .done(function (data) {
-            // console.log(data);
+            $(element).prop("disabled",false);
             window.location.href = "./billing-info";
         });
 
