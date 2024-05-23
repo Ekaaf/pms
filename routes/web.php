@@ -111,5 +111,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
 	Route::post('/get-user-info',[ReservationController::class, 'getUserInfo'])->name('Pms.GetUserInfo');
 
 	// check in 
-	
+	Route::get('/check-in',[ReservationController::class, 'checkInList'])->name('Pms.CheckInList.View');
+	Route::post('/check-in',[ReservationController::class, 'getAllCheckInList'])->name('Pms.CheckInList');
 });

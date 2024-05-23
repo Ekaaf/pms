@@ -12,6 +12,7 @@ use App\Models\Role;
 use App\Models\RoomCategoryRent;
 use Illuminate\Support\Facades\DB;
 use App\Service\MenuService;
+use App\SSP;
 
 class ReservationController extends Controller
 {
@@ -125,5 +126,62 @@ class ReservationController extends Controller
     public function getUserInfo(Request $request){
         $user = User::join('user_info', 'users.id', 'user_info.user_id')->where('users.id', $request->user_id)->first();
         return response()->json($user);
+    }
+
+
+    public function checkInList(Request $request)
+    {
+        return view('pms.check_in_list');
+    }
+
+    public function getAllCheckInList(Request $request){
+        $table = "(SELECT billing.id, billing.final_price, booking.from_date, booking.to_date FROM billing inner join users on billing.user_id = users.id inner join user_info on users.id = user_info.user_id  inner join booking on billing.id = booking.billing_id where billing.status = 1 and billing.checked_in = 0 group By billing.id, booking.from_date, booking.to_date) testtable";
+        // dd($table);
+        $primaryKey = 'id';
+        $columns = array(
+
+            array( 'db' => 'id', 'dt' => 'id' ),
+
+            array( 'db' => 'final_price', 'dt' => 'final_price' ),
+
+            array( 'db' => 'from_date', 'dt' => 'from_date' ),
+
+            array( 'db' => 'to_date', 'dt' => 'to_date' ),
+
+            array( 'db' => 'from_date', 'dt' => 'from_date' ),
+
+            array( 'db' => 'to_date', 'dt' => 'to_date' ),
+            
+            array( 'db' => 'from_date', 'dt' => 'from_date' ),
+
+            array( 'db' => 'to_date', 'dt' => 'to_date' ),
+        );
+
+        $database = config('database.connections.pgsql');
+
+        $sql_details = array(
+            'user' => $database['username'],
+            'pass' => $database['password'],
+            'db'   => $database['database'],
+            'host' => $database['host']
+        );
+        // dd($sql_details);
+        $result =  SSP::simple( $_POST, $sql_details, $table, $primaryKey, $columns);
+
+        $start=$_REQUEST['start']+1;
+
+        $idx=0;
+
+        foreach($result['data'] as &$res){
+
+            $res[0]=(string)$start;
+
+            $start++;
+
+            $idx++;
+
+        }
+        echo json_encode($result);
+
     }
 }
