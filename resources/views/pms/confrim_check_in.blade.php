@@ -116,7 +116,7 @@
 					// type: 'GET',
 			        // url: '/path/to/your/endpoint', // Update this to your actual endpoint
 			        // data: { billing_id: billingId },
-			        // success: function(response) {
+			        success: function(response) {
 		            // Append the date picker to the relevant container
 		        	var container = '#datepicker-container-' + billingId;
 		        	$(container).html('<input type="text" id="datepicker-' + billingId + '" class="datepicker">');
@@ -126,7 +126,7 @@
         	console.log(error);
         }
     });
-			}
+			
 		</script>
 
 		@endsection
