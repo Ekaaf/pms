@@ -109,8 +109,41 @@
                 { "data": "final_price" },
                 { "data": "to_date" },
                 { "data": "from_date" },
-                { "data": "to_date" },
-            ]
+                // { "data": "to_date" },
+                { "data": null, "orderable": false, "searchable": false }
+            ],
+            "columnDefs": [{
+                "targets": -1, // Targets the last column
+                "data": null,
+                "render": function(data, type, row, meta) {
+                    return '<button class="btn btn-success btn-sm" onclick="handleButtonClick(' + row.id +')">Check-in</button>';
+                }
+            }]
+
+        });
+    }
+
+    function handleButtonClick(id) {
+        // alert("Button clicked! "+ id);
+        
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            type: 'POST',
+            url: 'check-in-confirmation',
+            data: {
+              id : id
+            },
+            dataType: 'json',
+        })
+        .done(function (data) {
+            // $(element).prop("disabled",false);
+            console.log("AJAX request was successful:", data);
+            window.location.href = "./check-in-confirmation";
         });
     }
 

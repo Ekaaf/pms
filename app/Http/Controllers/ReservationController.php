@@ -16,7 +16,7 @@ use App\SSP;
 
 class ReservationController extends Controller
 {
-    
+
     public function reservation(Request $request)
     {   
         $request->session()->forget('booking_data_temp');
@@ -29,16 +29,16 @@ class ReservationController extends Controller
         $check_out = $request->check_out;
         $bookings = Booking::where(function ($query) use ($check_in, $check_out) {
             $query->where('from_date', '<=', $check_in)
-                  ->where('to_date', '>', $check_in);
+            ->where('to_date', '>', $check_in);
         })->orWhere(function ($query) use ($check_in, $check_out) {
             $query->where('from_date', '<', $check_out)
-                  ->where('to_date', '>=', $check_out);
+            ->where('to_date', '>=', $check_out);
         })->pluck('room_id');
         $data['available_rooms'] = Rooms::select('room_categories.*', DB::raw('COUNT(room_categories.id) as no_of_rooms'), 'files.path', 'files.filename')->join('room_categories', 'rooms.room_category_id', 'room_categories.id')
-                            ->join('files', 'room_categories.id', 'files.element_id')
-                            ->where('files.type', 'room-category-thumb')
-                            ->whereNotIn('room_number', $bookings)
-                            ->groupBy('room_categories.id', 'files.path', 'files.filename')->get();
+        ->join('files', 'room_categories.id', 'files.element_id')
+        ->where('files.type', 'room-category-thumb')
+        ->whereNotIn('room_number', $bookings)
+        ->groupBy('room_categories.id', 'files.path', 'files.filename')->get();
 
         $room_categories_id = array_column($data['available_rooms']->toArray(), 'id');
         $room_category_rents = RoomCategoryRent::whereIn('room_category_id', $room_categories_id)->where('rent_date', '>=', $check_in)->where('rent_date', '<', $check_out)->get();
@@ -184,4 +184,50 @@ class ReservationController extends Controller
         echo json_encode($result);
 
     }
+
+    public function confirmCheckIn(Request $request)
+    {
+        try {
+            // Retrieve the ID from the request
+            $id = $request->input('id');
+
+            // Perform the query to get booking details
+            $results = DB::table('booking')
+            ->select(
+                'booking.from_date',
+                'booking.to_date',
+                'booking.room_id',
+                DB::raw('EXTRACT(DAY FROM (booking.to_date - booking.from_date)) AS nights'),
+                'billing.final_price',
+                'billing.id as billing_id',
+                'billing_other_info.identity',
+                'billing_other_info.identity_number',
+                'billing_other_info.dob',
+                'billing_other_info.expire_date'
+            )
+            ->join('billing', 'booking.billing_id', '=', 'billing.id')
+            ->join('biiling_other_info as billing_other_info', 'billing.id', '=', 'billing_other_info.billing_id')
+            ->where('billing.id', '=', $id)
+            ->get();
+
+            // Store the results in the session
+            session(['booking_data' => $results]);
+
+            // Return a JSON response indicating success
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+
+            // Return a JSON response indicating failure
+            return response()->json(['status' => 'error', 'message' => 'An error occurred while confirming check-in: ' . $e->getMessage()], 500);
+
+        }
+    }
+    
+    public function showConfirmCheckIn(Request $request)
+    {
+        $bookingData = session('booking_data');        
+        // dd($bookingData);
+        return view('pms.confrim_check_in')->with('bookingData', $bookingData);
+    }
+
 }

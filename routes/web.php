@@ -113,4 +113,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
 	// check in 
 	Route::get('/check-in',[ReservationController::class, 'checkInList'])->name('Pms.CheckInList.View');
 	Route::post('/check-in',[ReservationController::class, 'getAllCheckInList'])->name('Pms.CheckInList');
+	Route::get('/check-in-confirmation', [ReservationController::class, 'showConfirmCheckIn'])->name('Pms.showConfirmCheckIn');
+	Route::post('/check-in-confirmation',[ReservationController::class, 'confirmCheckIn'])->name('Pms.confrimCheckIn');
+	
+
 });
