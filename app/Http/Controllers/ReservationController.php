@@ -13,6 +13,7 @@ use App\Models\RoomCategoryRent;
 use Illuminate\Support\Facades\DB;
 use App\Service\MenuService;
 use App\SSP;
+use App\Models\Billing;
 
 class ReservationController extends Controller
 {
@@ -37,7 +38,7 @@ class ReservationController extends Controller
         $data['available_rooms'] = Rooms::select('room_categories.*', DB::raw('COUNT(room_categories.id) as no_of_rooms'), 'files.path', 'files.filename')->join('room_categories', 'rooms.room_category_id', 'room_categories.id')
                             ->join('files', 'room_categories.id', 'files.element_id')
                             ->where('files.type', 'room-category-thumb')
-                            ->whereNotIn('room_number', $bookings)
+                            ->whereNotIn('rooms.id', $bookings)
                             ->groupBy('room_categories.id', 'files.path', 'files.filename')->get();
 
         $room_categories_id = array_column($data['available_rooms']->toArray(), 'id');
@@ -135,26 +136,27 @@ class ReservationController extends Controller
     }
 
     public function getAllCheckInList(Request $request){
-        $table = "(SELECT billing.id, billing.final_price, booking.from_date, booking.to_date FROM billing inner join users on billing.user_id = users.id inner join user_info on users.id = user_info.user_id  inner join booking on billing.id = booking.billing_id where billing.status = 1 and billing.checked_in = 0 group By billing.id, booking.from_date, booking.to_date) testtable";
+        $table = "(SELECT billing.id, billing.final_price, booking.from_date, booking.to_date,array_to_json(array_agg(row(room_categories.category, booking.room_category_id)))   
+                    as booked_rooms, users.email, billing.checked_in_time,  billing.checked_out_time FROM billing inner join users on billing.user_id = users.id inner join user_info on users.id = user_info.user_id  inner join booking on billing.id = booking.billing_id inner join room_categories on room_categories.id = booking.room_category_id where billing.status = 1 and (billing.checked_in = 0 OR billing.checked_out = 0) group By billing.id, booking.from_date, booking.to_date, users.email) testtable";
         // dd($table);
         $primaryKey = 'id';
         $columns = array(
 
             array( 'db' => 'id', 'dt' => 'id' ),
 
+            array( 'db' => 'from_date', 'dt' => 'from_date' ),
+
+            array( 'db' => 'to_date', 'dt' => 'to_date' ),
+
+            array( 'db' => 'email', 'dt' => 'email' ),
+
+            array( 'db' => 'booked_rooms', 'dt' => 'booked_rooms' ),
+            
             array( 'db' => 'final_price', 'dt' => 'final_price' ),
 
-            array( 'db' => 'from_date', 'dt' => 'from_date' ),
+            array( 'db' => 'checked_in_time', 'dt' => 'check_in_time' ),
 
-            array( 'db' => 'to_date', 'dt' => 'to_date' ),
-
-            array( 'db' => 'from_date', 'dt' => 'from_date' ),
-
-            array( 'db' => 'to_date', 'dt' => 'to_date' ),
-            
-            array( 'db' => 'from_date', 'dt' => 'from_date' ),
-
-            array( 'db' => 'to_date', 'dt' => 'to_date' ),
+            array( 'db' => 'checked_out_time', 'dt' => 'check_out_time' ),
         );
 
         $database = config('database.connections.pgsql');
@@ -176,6 +178,28 @@ class ReservationController extends Controller
 
             $res[0]=(string)$start;
 
+            $res['from_date'] = date_format(date_create($res['from_date']),"jS M, Y");
+
+            $res['to_date'] = date_format(date_create($res['to_date']),"jS M, Y");
+
+            $res['email'] = $res['email'];
+            
+            $booked_rooms = json_decode($res['booked_rooms']);
+            
+            $arr = [];$text = '';
+            foreach($booked_rooms as $room){
+                $arr[$room->f1] = 0;
+            }
+            foreach($booked_rooms as $room){
+                $arr[$room->f1]++;
+            }
+
+            foreach($arr as $key => $value){
+                $text .="<b>".$key.":</b> ".$value."<br>";
+            }
+
+            $res['booked_rooms_text'] = $text;
+
             $start++;
 
             $idx++;
@@ -183,5 +207,30 @@ class ReservationController extends Controller
         }
         echo json_encode($result);
 
+    }
+
+    public function checkInView(Request $request, $billing_id)
+    {   
+        $data = Billing::select('billing.id as billing_id', 'users.email', 'user_info.title', 'user_info.first_name', 'user_info.last_name', 'users.mobile', 'booking.from_date', 'booking.to_date', 'booking.people_adult', 'booking.people_child', 'booking.total_price', 'room_categories.category', 'rooms.room_number')->join('biiling_other_info', 'billing.id', 'biiling_other_info.billing_id')->join('booking', 'billing.id', 'booking.billing_id')->join('users', 'users.id', 'billing.user_id')->join('room_categories', 'room_categories.id', 'booking.room_category_id')->join('user_info', 'user_info.user_id', 'users.id')->join('rooms', 'rooms.id', 'booking.room_id')->where('billing.id', $billing_id)->get();
+
+        // dd($data);
+        return view('pms.check_in_guest')->with('data',$data);
+    }
+
+
+    public function checkInComplete(Request $request, $billing_id)
+    {
+        if($request->billing_id == $billing_id){
+            $billing = Billing::find($billing_id);
+            if($billing->checked_in == 1){
+                return redirect()->back()->with('error', "Guest Already Checked In")->withInput();
+            }
+            else{
+                $billing->checked_in = 1;
+                $billing->checked_in_time = date('Y-m-d H:i:s');
+                $billing->save();
+                echo "Checked In Successful";
+            }
+        }
     }
 }

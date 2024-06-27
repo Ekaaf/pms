@@ -113,7 +113,7 @@
 <script src="{{asset('assets/js/pages/form-input-spin.init.js')}}"></script>
 <script>
     $( document ).ready(function() {
-        searchRooms();
+        // searchRooms();
     });
     var room_categories = [];
     var check_in = '';
@@ -125,8 +125,8 @@
 
         check_in = $("#check_in").val();
         check_out = $("#check_out").val();
-        check_in = '2024-05-26';
-        check_out = '2024-05-29';
+        // check_in = '2024-05-26';
+        // check_out = '2024-05-29';
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

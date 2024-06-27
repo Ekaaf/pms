@@ -348,22 +348,23 @@ class MenuService{
                 $booked_rooms = $bookings->toArray();
             }
             
-            $rooms = Rooms::select('room_category_id', 'room_number')->where('room_category_id', $value['room_category_id'])->whereNotIn('room_number', $booked_rooms)->take($value['no_of_rooms'])->orderBy('room_number', 'ASC')->get();
+            $rooms = Rooms::select('room_category_id', 'room_number', 'id')->where('room_category_id', $value['room_category_id'])->whereNotIn('room_number', $booked_rooms)->take($value['no_of_rooms'])->orderBy('room_number', 'ASC')->get();
             foreach($rooms as $key_room => $room){
                 $booking_arr[$i]['user_id'] = $user_id;
-                $booking_arr[$i]['room_id'] = $room->room_number;
+                $booking_arr[$i]['room_id'] = $room->id;
                 $booking_arr[$i]['from_date'] = $booking_data['check_in'];
                 $booking_arr[$i]['to_date'] = $booking_data['check_out'];
                 $booking_arr[$i]['people_adult'] = $value['people_adult'][$key_room];
                 $booking_arr[$i]['people_child'] = $value['people_child'][$key_room];
-                $booking_arr[$i]['unit_price'] = $user_id;
+                $booking_arr[$i]['unit_price'] = $value['room_price']/$value['no_of_rooms']/$booking_data['no_of_nights'];
                 $booking_arr[$i]['discount'] = 0;
-                $booking_arr[$i]['total_price'] = 0;
+                $booking_arr[$i]['total_price'] = $value['room_price']/$value['no_of_rooms'];
                 $booking_arr[$i]['vat'] = 0;
                 $booking_arr[$i]['created_by'] = Auth::user()->id;;
                 $booking_arr[$i]['room_category_id'] = $room->room_category_id;
                 $booking_arr[$i]['created_at'] = date('Y-m-d H:i:s');
                 $booking_arr[$i]['billing_id'] = $billing_id;
+                $booking_arr[$i]['no_of_nights'] = $booking_data['no_of_nights'];
                 $i++;
             }
         }

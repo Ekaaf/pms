@@ -23,9 +23,7 @@
         </div>
 
         <?php
-            $editaction = checkButtonAccess('admin/room-category/edit/{id}');
-            $viewaction = checkButtonAccess('admin/room-category/view/{id}');
-            $deleteaction = checkButtonAccess('admin/room-category/delete/{id}');
+            $check_in_guest = checkButtonAccess('admin/check-in/{id}');
         ?>
         
         @if(checkButtonAccess('admin/room-category-rent/add'))
@@ -104,12 +102,21 @@
                 { "data": "0" },
                 { "data": "from_date" },
                 { "data": "to_date" },
-                { "data": "from_date" },
-                { "data": "to_date" },
+                { "data": "email" },
+                { "data": "booked_rooms_text" },
                 { "data": "final_price" },
-                { "data": "to_date" },
-                { "data": "from_date" },
-                { "data": "to_date" },
+                { "data": "check_in_time" },
+                { "data": "check_out_time" },
+                {
+                    "data": "id",
+                    "render": function ( data, type, full, meta ) {
+                        var buttons = "";
+                        @if($check_in_guest)
+                            buttons += "<a href=\"check-in-complete/"+data+"\"><button class=\"btn btn-primary waves-effect waves-light\"><i class=\"fa fa-edit\"></i>&nbsp Check In</button></a>";
+                        @endif
+                        return buttons;
+                    }
+                }
             ]
         });
     }
@@ -125,40 +132,40 @@
         Swal.fire({
             title: 'Are you sure want to delete ?',
             // text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                type: 'POST',
-                url: 'users/delete/'+id,
-                data: {
-                  id : id
-                },
-                dataType: 'json',
-            })
-            .done(function (data) {
-                if(data){
-                    Swal.fire(
-                      'Successfully Deleted',
-                      '',
-                      'success'
-                    );
-                    getAllUsers();
-                }
-                else{
-                    Swal.fire(
-                      'Sorry! User could not be deleted',
-                      '',
-                      'error'
-                    );
-                }
-            });
-        }
-    })
-}
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: 'POST',
+                    url: 'users/delete/'+id,
+                    data: {
+                      id : id
+                    },
+                    dataType: 'json',
+                })
+                .done(function (data) {
+                    if(data){
+                        Swal.fire(
+                          'Successfully Deleted',
+                          '',
+                          'success'
+                        );
+                        getAllUsers();
+                    }
+                    else{
+                        Swal.fire(
+                          'Sorry! User could not be deleted',
+                          '',
+                          'error'
+                        );
+                    }
+                });
+            }
+        })
+    }
 </script>
 @endsection
