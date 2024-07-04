@@ -21,32 +21,173 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: biiling_other_info; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.biiling_other_info (
+    id integer NOT NULL,
+    billing_id integer NOT NULL,
+    identity character varying(20),
+    dob date,
+    nationality character varying(30),
+    estimated_arrival_time character varying(20),
+    created_by integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone,
+    expire_date date,
+    identity_number character varying(100)
+);
+
+
+ALTER TABLE public.biiling_other_info OWNER TO postgres;
+
+--
+-- Name: biiling_other_info_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.biiling_other_info_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.biiling_other_info_id_seq OWNER TO postgres;
+
+--
+-- Name: biiling_other_info_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.biiling_other_info_id_seq OWNED BY public.biiling_other_info.id;
+
+
+--
+-- Name: billing; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.billing (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    total_price numeric NOT NULL,
+    total_discount numeric NOT NULL,
+    paid_amount numeric NOT NULL,
+    due_amount numeric NOT NULL,
+    total_vat numeric NOT NULL,
+    price_with_vat numeric NOT NULL,
+    adjustment numeric DEFAULT 0 NOT NULL,
+    final_price numeric NOT NULL,
+    created_by integer NOT NULL,
+    payment_completed numeric(1,0) DEFAULT 0 NOT NULL,
+    payment_completion_time timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp with time zone,
+    adjustment_reason text,
+    booking_type character varying(20),
+    checked_in numeric(1,0) DEFAULT 0 NOT NULL,
+    checked_out numeric(1,0) DEFAULT 0 NOT NULL,
+    checked_in_time timestamp without time zone,
+    checked_out_time timestamp without time zone,
+    status numeric(1,0) DEFAULT 1 NOT NULL
+);
+
+
+ALTER TABLE public.billing OWNER TO postgres;
+
+--
+-- Name: billing_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.billing_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.billing_id_seq OWNER TO postgres;
+
+--
+-- Name: billing_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.billing_id_seq OWNED BY public.billing.id;
+
+
+--
 -- Name: booking; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.booking (
     id integer NOT NULL,
-    user_id numeric(10,0) NOT NULL,
-    room_id numeric(10,0) NOT NULL,
+    user_id integer NOT NULL,
+    room_id integer NOT NULL,
     from_date timestamp(0) without time zone NOT NULL,
     to_date timestamp(0) without time zone NOT NULL,
     people_adult numeric(1,0),
-    people_children numeric(1,0),
-    checked_in_time timestamp(0) without time zone,
-    checked_out_time timestamp(0) without time zone,
+    people_child numeric(1,0),
     unit_price numeric(10,0),
     discount numeric(10,0),
     total_price numeric(10,0),
-    paid_amount numeric(10,0),
-    due_amount numeric(10,0),
     vat numeric(10,0),
     created_by numeric(10,0),
     created_at timestamp(0) without time zone,
-    updated_at timestamp(0) without time zone
+    updated_at timestamp(0) without time zone,
+    billing_id integer,
+    booking_type character varying(20),
+    room_category_id integer,
+    status numeric(1,0) DEFAULT 1 NOT NULL,
+    no_of_nights integer DEFAULT 0 NOT NULL
 );
 
 
 ALTER TABLE public.booking OWNER TO postgres;
+
+--
+-- Name: booking_days; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.booking_days (
+    id integer NOT NULL,
+    billing_id integer NOT NULL,
+    room_id integer NOT NULL,
+    date date NOT NULL,
+    unit_price numeric(10,0) NOT NULL,
+    discount numeric(10,0) NOT NULL,
+    total_price numeric(10,0) NOT NULL,
+    vat numeric(10,0) NOT NULL,
+    created_by integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.booking_days OWNER TO postgres;
+
+--
+-- Name: booking_days_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.booking_days_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.booking_days_id_seq OWNER TO postgres;
+
+--
+-- Name: booking_days_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.booking_days_id_seq OWNED BY public.booking_days.id;
+
 
 --
 -- Name: booking_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -281,6 +422,46 @@ CREATE TABLE public.password_reset_tokens (
 ALTER TABLE public.password_reset_tokens OWNER TO postgres;
 
 --
+-- Name: payment_records; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.payment_records (
+    id integer NOT NULL,
+    billing_id integer NOT NULL,
+    payment_medium character varying(30) NOT NULL,
+    amount numeric NOT NULL,
+    deduction numeric NOT NULL,
+    paid_by integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.payment_records OWNER TO postgres;
+
+--
+-- Name: payment_records_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.payment_records_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.payment_records_id_seq OWNER TO postgres;
+
+--
+-- Name: payment_records_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.payment_records_id_seq OWNED BY public.payment_records.id;
+
+
+--
 -- Name: personal_access_tokens; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -409,6 +590,47 @@ ALTER SEQUENCE public.room_categories_id_seq OWNED BY public.room_categories.id;
 
 
 --
+-- Name: room_categories_rent; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.room_categories_rent (
+    id integer NOT NULL,
+    room_category_id integer NOT NULL,
+    rent_date date NOT NULL,
+    price numeric NOT NULL,
+    discount numeric DEFAULT 0 NOT NULL,
+    net_price numeric NOT NULL,
+    created_by integer NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+ALTER TABLE public.room_categories_rent OWNER TO postgres;
+
+--
+-- Name: room_categories_rent_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.room_categories_rent_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.room_categories_rent_id_seq OWNER TO postgres;
+
+--
+-- Name: room_categories_rent_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.room_categories_rent_id_seq OWNED BY public.room_categories_rent.id;
+
+
+--
 -- Name: rooms; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -487,6 +709,51 @@ ALTER SEQUENCE public.user_access_id_seq OWNED BY public.user_access.id;
 
 
 --
+-- Name: user_info; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.user_info (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    title character varying(10) NOT NULL,
+    first_name character varying(100) NOT NULL,
+    last_name character varying NOT NULL,
+    address text,
+    postal_code character varying(30),
+    city character varying(50),
+    country character varying(100),
+    created_by integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone,
+    gender character varying(10)
+);
+
+
+ALTER TABLE public.user_info OWNER TO postgres;
+
+--
+-- Name: user_info_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.user_info_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.user_info_id_seq OWNER TO postgres;
+
+--
+-- Name: user_info_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.user_info_id_seq OWNED BY public.user_info.id;
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -499,7 +766,8 @@ CREATE TABLE public.users (
     verified smallint DEFAULT '0'::smallint,
     status smallint,
     created_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at timestamp(0) without time zone
+    updated_at timestamp(0) without time zone,
+    created_by integer
 );
 
 
@@ -528,10 +796,31 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- Name: biiling_other_info id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.biiling_other_info ALTER COLUMN id SET DEFAULT nextval('public.biiling_other_info_id_seq'::regclass);
+
+
+--
+-- Name: billing id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.billing ALTER COLUMN id SET DEFAULT nextval('public.billing_id_seq'::regclass);
+
+
+--
 -- Name: booking id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.booking ALTER COLUMN id SET DEFAULT nextval('public.booking_id_seq'::regclass);
+
+
+--
+-- Name: booking_days id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.booking_days ALTER COLUMN id SET DEFAULT nextval('public.booking_days_id_seq'::regclass);
 
 
 --
@@ -570,6 +859,13 @@ ALTER TABLE ONLY public.migrations ALTER COLUMN id SET DEFAULT nextval('public.m
 
 
 --
+-- Name: payment_records id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.payment_records ALTER COLUMN id SET DEFAULT nextval('public.payment_records_id_seq'::regclass);
+
+
+--
 -- Name: personal_access_tokens id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -591,6 +887,13 @@ ALTER TABLE ONLY public.room_categories ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
+-- Name: room_categories_rent id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.room_categories_rent ALTER COLUMN id SET DEFAULT nextval('public.room_categories_rent_id_seq'::regclass);
+
+
+--
 -- Name: rooms id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -605,6 +908,13 @@ ALTER TABLE ONLY public.user_access ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: user_info id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_info ALTER COLUMN id SET DEFAULT nextval('public.user_info_id_seq'::regclass);
+
+
+--
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -612,10 +922,50 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 --
+-- Data for Name: biiling_other_info; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.biiling_other_info (id, billing_id, identity, dob, nationality, estimated_arrival_time, created_by, created_at, updated_at, expire_date, identity_number) FROM stdin;
+45	46	passport	2024-06-27	Bangladesh	\N	1	2024-06-27 09:09:46	2024-06-27 09:09:46	2024-06-27	passport
+53	57	passport	2024-06-27	Bangladesh	\N	1	2024-06-27 09:47:33	2024-06-27 09:47:33	2024-06-27	passport
+77	81	passport	2024-07-16	Bangladesh	\N	1	2024-07-04 12:35:39	2024-07-04 12:35:39	2024-07-24	passport
+\.
+
+
+--
+-- Data for Name: billing; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.billing (id, user_id, total_price, total_discount, paid_amount, due_amount, total_vat, price_with_vat, adjustment, final_price, created_by, payment_completed, payment_completion_time, created_at, updated_at, adjustment_reason, booking_type, checked_in, checked_out, checked_in_time, checked_out_time, status) FROM stdin;
+46	3	36000	0	0	36000	0	0	0	36000	1	0	\N	2024-06-27 09:09:46	2024-06-27 09:09:46+06	\N	\N	0	0	\N	\N	1
+57	37	32000	0	0	32000	0	0	0	32000	1	0	\N	2024-06-27 09:47:33	2024-06-30 06:06:49+06	\N	\N	1	1	2024-06-27 14:00:03	2024-06-30 06:06:49	1
+81	37	32000	0	0	32000	0	0	0	32000	1	0	\N	2024-07-04 12:35:39	2024-07-04 12:35:39+06	\N	\N	0	0	\N	\N	1
+\.
+
+
+--
 -- Data for Name: booking; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.booking (id, user_id, room_id, from_date, to_date, people_adult, people_children, checked_in_time, checked_out_time, unit_price, discount, total_price, paid_amount, due_amount, vat, created_by, created_at, updated_at) FROM stdin;
+COPY public.booking (id, user_id, room_id, from_date, to_date, people_adult, people_child, unit_price, discount, total_price, vat, created_by, created_at, updated_at, billing_id, booking_type, room_category_id, status, no_of_nights) FROM stdin;
+23	3	6	2024-06-28 00:00:00	2024-07-01 00:00:00	1	1	3	0	0	0	1	2024-06-27 09:09:46	\N	46	\N	41	1	0
+24	3	1	2024-06-28 00:00:00	2024-07-01 00:00:00	1	1	3	0	0	0	1	2024-06-27 09:09:46	\N	46	\N	40	1	0
+26	37	6	2024-07-01 00:00:00	2024-07-02 00:00:00	1	1	8000	0	16000	0	1	2024-06-27 09:47:33	\N	57	\N	41	1	2
+27	37	7	2024-07-01 00:00:00	2024-07-02 00:00:00	1	1	8000	0	16000	0	1	2024-06-27 09:47:33	\N	57	\N	41	1	2
+44	37	6	2024-07-04 00:00:00	2024-07-06 00:00:00	1	1	8000	0	16000	0	1	2024-07-04 12:35:39	\N	81	\N	41	1	2
+45	37	7	2024-07-04 00:00:00	2024-07-06 00:00:00	1	1	8000	0	16000	0	1	2024-07-04 12:35:39	\N	81	\N	41	1	2
+\.
+
+
+--
+-- Data for Name: booking_days; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.booking_days (id, billing_id, room_id, date, unit_price, discount, total_price, vat, created_by, created_at, updated_at) FROM stdin;
+1	81	6	2024-07-04	8000	0	8000	0	1	2024-07-04 12:35:39	\N
+2	81	6	2024-07-05	8000	0	8000	0	1	2024-07-04 12:35:39	\N
+3	81	7	2024-07-04	8000	0	8000	0	1	2024-07-04 12:35:39	\N
+4	81	7	2024-07-05	8000	0	8000	0	1	2024-07-04 12:35:39	\N
 \.
 
 
@@ -632,6 +982,10 @@ COPY public.failed_jobs (id, uuid, connection, queue, payload, exception, failed
 --
 
 COPY public.files (id, type, path, created_at, updated_at, element_id, last_modified_by, filename) FROM stdin;
+33	room-category-thumb	images/room-category/Panorama Ocean Suite/	2024-04-22 10:59:43	2024-04-22 10:59:43	40	1	Panorama Ocean Suite_thumb.webp
+37	room-category-other-image	images/room-category/Panorama Ocean Suite/	2024-04-22 10:59:43	\N	40	1	Panorama Ocean Suite_other_image_1.webp
+38	room-category-thumb	images/room-category/Sea View/	2024-04-30 05:42:22	\N	41	1	Sea View_thumb.webp
+40	room-category-other-image	images/room-category/Sea View/	2024-05-08 09:03:02	\N	41	1	Sea View_other_image_1.webp
 2	room-category-thumb	images/room-category/test/	2024-04-18 11:03:19	\N	33	1	test_thumb
 3	room-category-other-image	images/room-category/test/	2024-04-18 11:03:20	\N	33	1	test_other_image_1
 4	room-category-other-image	images/room-category/test/	2024-04-18 11:03:20	\N	33	1	test_other_image_2
@@ -671,6 +1025,10 @@ COPY public.menu_methods (id, menu_id, type, path, method_name, "default", creat
 25	8	0	admin/room-category-rent/add	Room Rent Add	0	\N	2024-04-16 12:15:25	\N
 26	8	0	admin/room-category-rent/edit/{id}	Room Rent Edit	0	\N	2024-04-16 12:15:25	\N
 27	8	0	admin/room-category-rent/delete/{id}	Room Rent Delete	0	\N	2024-04-16 12:15:25	\N
+28	9	1	admin/check-in	Check In View	0	\N	2024-06-30 12:09:27	\N
+29	9	0	admin/check-in-complete/{id}	Check In Complete	0	\N	2024-06-30 12:09:27	\N
+30	10	1	admin/check-out	Check Out View	0	\N	2024-06-30 12:14:15	\N
+31	10	0	admin/check-out-complete/{id}	Check Out	0	\N	2024-06-30 12:14:15	\N
 \.
 
 
@@ -687,6 +1045,8 @@ COPY public.menus (id, parent_id, title, path, icon, serial, active, "default", 
 6	\N	Room Category	admin/room-category	\N	\N	1	0	1	2024-04-16 06:12:38	2024-04-16 06:12:38
 7	\N	Rooms	admin/rooms	\N	\N	1	0	1	2024-04-16 06:13:56	2024-04-16 06:13:56
 8	\N	Room Rent	admin/room-category-rent	\N	\N	1	0	1	2024-04-16 06:15:24	2024-04-16 06:15:24
+9	\N	Check In	admin/check-in	\N	\N	1	0	1	2024-06-30 06:09:26	2024-06-30 06:09:26
+10	\N	Check Out	admin/check-out	\N	\N	1	0	1	2024-06-30 06:14:15	2024-06-30 06:14:15
 \.
 
 
@@ -718,6 +1078,85 @@ COPY public.migrations (id, migration, batch) FROM stdin;
 21	2024_04_18_110403_create_rooms_table	0
 22	2024_04_18_110403_create_user_access_table	0
 23	2024_04_18_110403_create_users_table	0
+24	2024_04_25_051830_create_biiling_other_info_table	0
+25	2024_04_25_051830_create_billing_table	0
+26	2024_04_25_051830_create_booking_table	0
+27	2024_04_25_051830_create_failed_jobs_table	0
+28	2024_04_25_051830_create_files_table	0
+29	2024_04_25_051830_create_menu_methods_table	0
+30	2024_04_25_051830_create_menus_table	0
+31	2024_04_25_051830_create_password_reset_tokens_table	0
+32	2024_04_25_051830_create_payment_records_table	0
+33	2024_04_25_051830_create_personal_access_tokens_table	0
+34	2024_04_25_051830_create_roles_table	0
+35	2024_04_25_051830_create_room_categories_table	0
+36	2024_04_25_051830_create_rooms_table	0
+37	2024_04_25_051830_create_user_access_table	0
+38	2024_04_25_051830_create_users_table	0
+39	2024_04_25_064949_create_biiling_other_info_table	0
+40	2024_04_25_064949_create_billing_table	0
+41	2024_04_25_064949_create_booking_table	0
+42	2024_04_25_064949_create_failed_jobs_table	0
+43	2024_04_25_064949_create_files_table	0
+44	2024_04_25_064949_create_menu_methods_table	0
+45	2024_04_25_064949_create_menus_table	0
+46	2024_04_25_064949_create_password_reset_tokens_table	0
+47	2024_04_25_064949_create_payment_records_table	0
+48	2024_04_25_064949_create_personal_access_tokens_table	0
+49	2024_04_25_064949_create_roles_table	0
+50	2024_04_25_064949_create_room_categories_table	0
+51	2024_04_25_064949_create_rooms_table	0
+52	2024_04_25_064949_create_user_access_table	0
+53	2024_04_25_064949_create_users_table	0
+54	2024_05_05_111001_create_biiling_other_info_table	0
+55	2024_05_05_111001_create_billing_table	0
+56	2024_05_05_111001_create_booking_table	0
+57	2024_05_05_111001_create_failed_jobs_table	0
+58	2024_05_05_111001_create_files_table	0
+59	2024_05_05_111001_create_menu_methods_table	0
+60	2024_05_05_111001_create_menus_table	0
+61	2024_05_05_111001_create_password_reset_tokens_table	0
+62	2024_05_05_111001_create_payment_records_table	0
+63	2024_05_05_111001_create_personal_access_tokens_table	0
+64	2024_05_05_111001_create_roles_table	0
+65	2024_05_05_111001_create_room_categories_table	0
+66	2024_05_05_111001_create_rooms_table	0
+67	2024_05_05_111001_create_user_access_table	0
+68	2024_05_05_111001_create_user_info_table	0
+69	2024_05_05_111001_create_users_table	0
+70	2024_05_07_112339_create_biiling_other_info_table	0
+71	2024_05_07_112339_create_billing_table	0
+72	2024_05_07_112339_create_booking_table	0
+73	2024_05_07_112339_create_failed_jobs_table	0
+74	2024_05_07_112339_create_files_table	0
+75	2024_05_07_112339_create_menu_methods_table	0
+76	2024_05_07_112339_create_menus_table	0
+77	2024_05_07_112339_create_password_reset_tokens_table	0
+78	2024_05_07_112339_create_payment_records_table	0
+79	2024_05_07_112339_create_personal_access_tokens_table	0
+80	2024_05_07_112339_create_roles_table	0
+81	2024_05_07_112339_create_room_categories_table	0
+82	2024_05_07_112339_create_rooms_table	0
+83	2024_05_07_112339_create_user_access_table	0
+84	2024_05_07_112339_create_user_info_table	0
+85	2024_05_07_112339_create_users_table	0
+86	2024_05_13_065251_create_biiling_other_info_table	0
+87	2024_05_13_065251_create_billing_table	0
+88	2024_05_13_065251_create_booking_table	0
+89	2024_05_13_065251_create_failed_jobs_table	0
+90	2024_05_13_065251_create_files_table	0
+91	2024_05_13_065251_create_menu_methods_table	0
+92	2024_05_13_065251_create_menus_table	0
+93	2024_05_13_065251_create_password_reset_tokens_table	0
+94	2024_05_13_065251_create_payment_records_table	0
+95	2024_05_13_065251_create_personal_access_tokens_table	0
+96	2024_05_13_065251_create_roles_table	0
+97	2024_05_13_065251_create_room_categories_table	0
+98	2024_05_13_065251_create_room_categories_rent_table	0
+99	2024_05_13_065251_create_rooms_table	0
+100	2024_05_13_065251_create_user_access_table	0
+101	2024_05_13_065251_create_user_info_table	0
+102	2024_05_13_065251_create_users_table	0
 \.
 
 
@@ -726,6 +1165,14 @@ COPY public.migrations (id, migration, batch) FROM stdin;
 --
 
 COPY public.password_reset_tokens (email, token, created_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: payment_records; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.payment_records (id, billing_id, payment_medium, amount, deduction, paid_by, created_at, updated_at) FROM stdin;
 \.
 
 
@@ -742,6 +1189,9 @@ COPY public.personal_access_tokens (id, tokenable_type, tokenable_id, name, toke
 --
 
 COPY public.roles (id, name, created_by, created_at, updated_at) FROM stdin;
+1	Super Admin	1	2024-05-06 10:08:03	2024-05-06 10:08:03
+2	Customer	1	2024-05-06 10:08:22	2024-05-06 10:08:22
+3	Guest	1	2024-05-06 10:08:29	2024-05-06 10:08:29
 \.
 
 
@@ -750,7 +1200,28 @@ COPY public.roles (id, name, created_by, created_at, updated_at) FROM stdin;
 --
 
 COPY public.room_categories (id, category, size, people_adult, people_child, description, package, facilities, created_by, created_at, updated_at, bed, check_in, check_out, check_in_instruction, cancellation_policy, price, discount) FROM stdin;
+40	Panorama Ocean Suite	500	2	1	<p><span style="background-color:rgb(246,245,251);color:rgb(0,0,0);font-family:&quot;Open Sans&quot;, &quot;Open Sans&quot;;font-size:17px;"><span style="-webkit-text-stroke-width:0px;display:inline !important;float:none;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;">A luxurious 2 bedroom suit perfect for family &amp; friends with the 180 degree view of world’s longest unbroken beach. The ceiling height window from the living room gives you an excellent opportunity to indulge with Sun, Sand &amp; Sea.</span></span></p>	<p><span style="background-color:rgb(246,245,251);color:rgb(0,0,0);font-family:&quot;Open Sans&quot;, &quot;Open Sans&quot;;font-size:17px;"><span style="-webkit-text-stroke-width:0px;display:inline !important;float:none;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;">A luxurious 2 bedroom suit perfect for family &amp; friends with the 180 degree view of world’s longest unbroken beach. The ceiling height window from the living room gives you an excellent opportunity to indulge with Sun, Sand &amp; Sea.</span></span></p>	<p><span style="background-color:rgb(246,245,251);color:rgb(0,0,0);font-family:&quot;Open Sans&quot;, &quot;Open Sans&quot;;font-size:17px;"><span style="-webkit-text-stroke-width:0px;display:inline !important;float:none;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;">A luxurious 2 bedroom suit perfect for family &amp; friends with the 180 degree view of world’s longest unbroken beach. The ceiling height window from the living room gives you an excellent opportunity to indulge with Sun, Sand &amp; Sea.</span></span></p>	1	2024-04-22 10:55:25	2024-04-22 10:55:25	2	11	12	<p><span style="background-color:rgb(246,245,251);color:rgb(0,0,0);font-family:&quot;Open Sans&quot;, &quot;Open Sans&quot;;font-size:17px;"><span style="-webkit-text-stroke-width:0px;display:inline !important;float:none;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;">A luxurious 2 bedroom suit perfect for family &amp; friends with the 180 degree view of world’s longest unbroken beach. The ceiling height window from the living room gives you an excellent opportunity to indulge with Sun, Sand &amp; Sea.</span></span></p>	<p><span style="background-color:rgb(246,245,251);color:rgb(0,0,0);font-family:&quot;Open Sans&quot;, &quot;Open Sans&quot;;font-size:17px;"><span style="-webkit-text-stroke-width:0px;display:inline !important;float:none;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;orphans:2;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;white-space:normal;widows:2;word-spacing:0px;">A luxurious 2 bedroom suit perfect for family &amp; friends with the 180 degree view of world’s longest unbroken beach. The ceiling height window from the living room gives you an excellent opportunity to indulge with Sun, Sand &amp; Sea.</span></span></p>	5000	10
+41	Sea View	1000	2	2	<p>test</p>	<p>test</p>	<p>test</p>	1	2024-04-30 05:42:19	2024-05-08 09:03:00	1	14:00	12:00	<p>tes</p>	<p>test</p>	8000	10
 33	test	1	1	1	<p>test</p>	<p>test</p>	<p>test</p>	1	2024-04-18 11:03:19	2024-04-18 11:03:19	1	11	22	<p>test</p>	<p>test</p>	1	1
+\.
+
+
+--
+-- Data for Name: room_categories_rent; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.room_categories_rent (id, room_category_id, rent_date, price, discount, net_price, created_by, created_at, updated_at) FROM stdin;
+1	40	2024-05-09	7000	500	6500	1	2024-05-08 09:20:55	\N
+2	40	2024-05-10	7000	500	6500	1	2024-05-08 09:20:55	\N
+3	40	2024-05-11	7000	500	6500	1	2024-05-08 09:20:55	\N
+4	40	2024-05-12	7000	500	6500	1	2024-05-08 09:20:55	\N
+5	40	2024-05-13	7000	500	6500	1	2024-05-08 09:20:55	\N
+6	40	2024-05-14	7000	500	6500	1	2024-05-08 09:20:55	\N
+7	40	2024-05-15	7000	500	6500	1	2024-05-08 09:20:55	\N
+8	40	2024-05-24	6500	500	6000	1	2024-05-23 05:39:01	\N
+9	40	2024-05-25	6500	500	6000	1	2024-05-23 05:39:01	\N
+10	40	2024-05-26	6500	500	6000	1	2024-05-23 05:39:01	\N
+11	40	2024-05-27	6500	500	6000	1	2024-05-23 05:39:01	\N
 \.
 
 
@@ -759,6 +1230,14 @@ COPY public.room_categories (id, category, size, people_adult, people_child, des
 --
 
 COPY public.rooms (id, room_category_id, room_number, room_status, status, housekeeping, created_by, created_at, updated_at) FROM stdin;
+1	40	101	1	1	1	1	2024-04-30 05:41:09	\N
+2	40	102	1	1	1	1	2024-04-30 05:41:09	\N
+3	40	103	1	1	1	1	2024-04-30 05:41:09	\N
+4	40	104	1	1	1	1	2024-04-30 05:41:09	\N
+5	40	105	1	1	1	1	2024-04-30 05:41:09	\N
+6	41	201	1	1	1	1	2024-04-30 05:42:40	\N
+7	41	202	1	1	1	1	2024-04-30 05:42:40	\N
+8	41	203	1	1	1	1	2024-04-30 05:42:40	\N
 \.
 
 
@@ -771,12 +1250,47 @@ COPY public.user_access (id, menu_method_id, role_id, created_at, updated_at) FR
 
 
 --
+-- Data for Name: user_info; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.user_info (id, user_id, title, first_name, last_name, address, postal_code, city, country, created_by, created_at, updated_at, gender) FROM stdin;
+2	3	Mr.	John	Ekaf	dhaka	1	dhaka	Bangladesh	1	2024-05-06 10:10:50	2024-05-06 10:10:50	\N
+33	37	Mr.	John	Ekaf	dhaka	1	dhaka	Bangladesh	1	2024-05-07 11:15:35	2024-05-07 11:15:35	Male.
+35	39	Mr.	John	Ekaf	dhaka	1	dhaka	Bangladesh	1	2024-05-07 11:18:25	2024-05-07 11:18:25	Female
+\.
+
+
+--
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.users (id, email, password, mobile, role_id, verified, status, created_at, updated_at) FROM stdin;
-1	ishmam.ekaf@gmail.com	$2y$10$.8f.1XdZAJ9Wp/VRPMsuMOSKzUoA8uNSWiqNAR093g3nPfcIBb6o6	01766833859	1	1	1	2024-04-16 11:59:32	\N
+COPY public.users (id, email, password, mobile, role_id, verified, status, created_at, updated_at, created_by) FROM stdin;
+1	ishmam.ekaf@gmail.com	$2y$10$.8f.1XdZAJ9Wp/VRPMsuMOSKzUoA8uNSWiqNAR093g3nPfcIBb6o6	01766833859	1	1	1	2024-04-16 11:59:32	\N	\N
+37	newuser@gmail.com	$2y$12$Vi02inJz9b.Wzy/DORnlS.B.pPh.Yc9r8ZRBp58D6ytZ/5bZN2GD6	\N	2	0	1	2024-05-07 11:15:35	2024-05-07 11:15:35	1
+39	guest@gmail.com	$2y$12$9dkRBH8SkpLR1jHidVD8xObWd3bIwbx.srORXwu2DlrgDw8H5OnoC	\N	3	0	1	2024-05-07 11:18:25	2024-05-07 11:18:25	1
+3	ishmam.ekaf@gmail.com	$2y$12$2taA2Tk2Lomvp7NiO.ib4ewVbh1PKC765Pttp/OEagf7w4jdOn/Om	01766833859	2	0	1	2024-05-06 10:10:50	2024-05-06 10:10:50	1
 \.
+
+
+--
+-- Name: biiling_other_info_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.biiling_other_info_id_seq', 77, true);
+
+
+--
+-- Name: billing_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.billing_id_seq', 81, true);
+
+
+--
+-- Name: booking_days_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.booking_days_id_seq', 4, true);
 
 
 --
@@ -822,6 +1336,13 @@ SELECT pg_catalog.setval('public.migrations_id_seq', 23, true);
 
 
 --
+-- Name: payment_records_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.payment_records_id_seq', 1, false);
+
+
+--
 -- Name: personal_access_tokens_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -843,6 +1364,13 @@ SELECT pg_catalog.setval('public.room_categories_id_seq', 33, true);
 
 
 --
+-- Name: room_categories_rent_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.room_categories_rent_id_seq', 11, true);
+
+
+--
 -- Name: rooms_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -857,10 +1385,41 @@ SELECT pg_catalog.setval('public.user_access_id_seq', 1, false);
 
 
 --
+-- Name: user_info_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.user_info_id_seq', 35, true);
+
+
+--
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
 SELECT pg_catalog.setval('public.users_id_seq', 1, true);
+
+
+--
+-- Name: biiling_other_info biiling_other_info_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.biiling_other_info
+    ADD CONSTRAINT biiling_other_info_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: billing billing_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.billing
+    ADD CONSTRAINT billing_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: booking_days booking_days_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.booking_days
+    ADD CONSTRAINT booking_days_pkey PRIMARY KEY (id);
 
 
 --
@@ -928,6 +1487,14 @@ ALTER TABLE ONLY public.password_reset_tokens
 
 
 --
+-- Name: payment_records payment_records_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.payment_records
+    ADD CONSTRAINT payment_records_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: personal_access_tokens personal_access_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -960,6 +1527,14 @@ ALTER TABLE ONLY public.room_categories
 
 
 --
+-- Name: room_categories_rent room_categories_rent_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.room_categories_rent
+    ADD CONSTRAINT room_categories_rent_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: rooms rooms_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -973,6 +1548,14 @@ ALTER TABLE ONLY public.rooms
 
 ALTER TABLE ONLY public.user_access
     ADD CONSTRAINT user_access_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_info user_info_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_info
+    ADD CONSTRAINT user_info_pkey PRIMARY KEY (id);
 
 
 --
