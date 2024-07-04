@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use App\Service\MenuService;
 use App\SSP;
 use App\Models\Billing;
+use App\Models\RoomCategory;
 
 class ReservationController extends Controller
 {
@@ -232,5 +233,183 @@ class ReservationController extends Controller
                 echo "Checked In Successful";
             }
         }
+    }
+
+
+
+    public function checkOutList(Request $request)
+    {
+        return view('pms.check_out_list');
+    }
+
+    public function getAllCheckOutList(Request $request){
+        $table = "(SELECT billing.id, billing.final_price, booking.from_date, booking.to_date,array_to_json(array_agg(row(room_categories.category, booking.room_category_id)))   
+                    as booked_rooms, users.email, billing.checked_in_time,  billing.checked_out_time FROM billing inner join users on billing.user_id = users.id inner join user_info on users.id = user_info.user_id  inner join booking on billing.id = booking.billing_id inner join room_categories on room_categories.id = booking.room_category_id where billing.status = 1 AND billing.checked_in = 1 AND billing.checked_out = 0 group By billing.id, booking.from_date, booking.to_date, users.email) testtable";
+        // dd($table);
+        $primaryKey = 'id';
+        $columns = array(
+
+            array( 'db' => 'id', 'dt' => 'id' ),
+
+            array( 'db' => 'from_date', 'dt' => 'from_date' ),
+
+            array( 'db' => 'to_date', 'dt' => 'to_date' ),
+
+            array( 'db' => 'email', 'dt' => 'email' ),
+
+            array( 'db' => 'booked_rooms', 'dt' => 'booked_rooms' ),
+            
+            array( 'db' => 'final_price', 'dt' => 'final_price' ),
+
+            array( 'db' => 'checked_in_time', 'dt' => 'check_in_time' ),
+
+            array( 'db' => 'checked_out_time', 'dt' => 'check_out_time' ),
+        );
+
+        $database = config('database.connections.pgsql');
+
+        $sql_details = array(
+            'user' => $database['username'],
+            'pass' => $database['password'],
+            'db'   => $database['database'],
+            'host' => $database['host']
+        );
+        // dd($sql_details);
+        $result =  SSP::simple( $_POST, $sql_details, $table, $primaryKey, $columns);
+
+        $start=$_REQUEST['start']+1;
+
+        $idx=0;
+
+        foreach($result['data'] as &$res){
+
+            $res[0]=(string)$start;
+
+            $res['from_date'] = date_format(date_create($res['from_date']),"jS M, Y");
+
+            $res['to_date'] = date_format(date_create($res['to_date']),"jS M, Y");
+
+            $res['email'] = $res['email'];
+            
+            $booked_rooms = json_decode($res['booked_rooms']);
+            
+            $arr = [];$text = '';
+            foreach($booked_rooms as $room){
+                $arr[$room->f1] = 0;
+            }
+            foreach($booked_rooms as $room){
+                $arr[$room->f1]++;
+            }
+
+            foreach($arr as $key => $value){
+                $text .="<b>".$key.":</b> ".$value."<br>";
+            }
+
+            $res['booked_rooms_text'] = $text;
+
+            $start++;
+
+            $idx++;
+
+        }
+        echo json_encode($result);
+
+    }
+
+    public function checkOutView(Request $request, $billing_id)
+    {   
+        $data = Billing::select('billing.id as billing_id', 'billing.checked_in_time', 'users.email', 'user_info.title', 'user_info.first_name', 'user_info.last_name', 'users.mobile', 'booking.from_date', 'booking.to_date', 'booking.people_adult', 'booking.people_child', 'booking.total_price', 'room_categories.category', 'rooms.room_number')->join('biiling_other_info', 'billing.id', 'biiling_other_info.billing_id')->join('booking', 'billing.id', 'booking.billing_id')->join('users', 'users.id', 'billing.user_id')->join('room_categories', 'room_categories.id', 'booking.room_category_id')->join('user_info', 'user_info.user_id', 'users.id')->join('rooms', 'rooms.id', 'booking.room_id')->where('billing.id', $billing_id)->get();
+
+        // dd($data);
+        return view('pms.check_out_guest')->with('data',$data);
+    }
+
+
+    public function checkOutComplete(Request $request, $billing_id)
+    {
+        if($request->billing_id == $billing_id){
+            $billing = Billing::find($billing_id);
+            if($billing->checked_in == 0){
+                return redirect()->back()->with('error', "Guest did not Checked In")->withInput();
+            }
+            else if($billing->checked_out == 1){
+                return redirect()->back()->with('error', "Guest Already Checked Out")->withInput();
+            }
+            else{
+                $billing->checked_out = 1;
+                $billing->checked_out_time = date('Y-m-d H:i:s');
+                $billing->save();
+                echo "Checked Out Successful";
+            }
+        }
+    }
+
+
+
+    public function stayView(Request $request)
+    {   
+        $days = [];
+        for($i=0; $i<7; $i++){
+            $days[$i] = date('d M Y', strtotime("+".$i." day"));
+        }
+        return view('pms.stay_view')->with('days',$days);
+    }
+
+
+
+    public function roomView(Request $request)
+    {   
+        $today = date('Y-m-d');
+        $hour = date('H');
+        $data = [];
+        $rooms = RoomCategory::select('rooms.id', 'category', 'rooms.room_number', 'from_date', 'to_date', 'title', 'first_name', 'last_name', 'billing.checked_in',                     'billing.checked_out', 'billing.checked_in_time', 'billing.checked_out_time')
+                                ->join('rooms', 'room_categories.id', '=', 'rooms.room_category_id')
+                                ->leftJoin(DB::raw('(SELECT billing_id, booking.user_id, DATE(booking.from_date) as from_date, DATE(booking.to_date) as to_date, booking.room_id, user_info.title, user_info.first_name, user_info.last_name FROM booking inner join user_info on booking.user_id = user_info.user_id WHERE \''.$today.'\' between from_date and to_date) AS booking_data'), 'rooms.id', '=', 'booking_data.room_id')
+                                ->leftJoin('billing', 'booking_data.billing_id', '=', 'billing.id')
+                                ->get();
+        // dd($hour);
+        foreach($rooms as $room){
+            $room_status = 'empty';
+            $data[$room->category][$room->id]['room_number'] = $room->room_number;
+            $data[$room->category][$room->id]['guest_name'] = '';
+
+            if($room->from_date == $today && $hour>12){
+                $data[$room->category][$room->id]['guest_name'] = $room->title.' '.$room->first_name.' '.$room->last_name;
+
+                if($room->checked_in == 1){
+                    $room_status = 'checked_in';
+                }
+                else{
+                    $room_status = 'booked';
+                }
+            }
+            else if($room->to_date == $today && $hour<12){
+                $data[$room->category][$room->id]['guest_name'] = $room->title.' '.$room->first_name.' '.$room->last_name;
+
+                if($room->checked_out == 1){
+                    $room_status = 'checked_out';
+                }
+                else{
+                    $room_status = 'checking_out';
+                }
+            }
+            else if($today> $room->from_date && $today <$room->to_date){
+                $data[$room->category][$room->id]['guest_name'] = $room->title.' '.$room->first_name.' '.$room->last_name;
+
+                if($room->checked_in == 0){
+                    $room_status = 'booked';
+                }
+                else if($room->checked_in == 1){
+                    $room_status = 'checked_in';
+                }
+                else if($room->checked_out == 1){
+                    $room_status = 'checked_out';
+                }
+            }
+            $data[$room->category][$room->id]['room_status'] = $room_status;
+
+        }
+        // dd($data);
+        return view('pms.room_view')->with('data',$data);
     }
 }

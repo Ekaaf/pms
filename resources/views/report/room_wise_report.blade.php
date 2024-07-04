@@ -9,11 +9,11 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-transparent">
-                        <h4 class="mb-sm-0">Room Categories List</h4>
+                        <h4 class="mb-sm-0">Report</h4>
 
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Room Categories</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Room Wise Report</a></li>
                             </ol>
                         </div>
 
@@ -26,34 +26,40 @@
             $check_in_guest = checkButtonAccess('admin/check-in/{id}');
         ?>
         
-        @if(checkButtonAccess('admin/room-category-rent/add'))
-        <div class="text-end">
-            <a href="{{URL::to('admin/room-category/add')}}" class="btn btn-success btn-border">
-                <i class="bx bx-add-to-queue"></i>&nbsp
-                Add Room Category
-            </a>
-        </div>
-        <br>
-        @endif
-
         @include('layout.message')
 
         <div class="row">
             <div class="col-xl-12">
+
                 <div class="card">
                     <div class="card-body">
-                        <table class="table table-bordered table-nowrap align-middle mb-0" id="roomCategoriesTable">
+                        <div class="row gy-4">
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="basiInput" class="form-label">From Date:</label>
+                                    <input type="date" class="form-control" id="from_date" name="from_date">
+                                </div>
+                            </div>
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="basiInput" class="form-label">To Date:</label>
+                                    <input type="date" class="form-control" id="to_date" name="to_date">
+                                </div>
+                            </div>
+                            <div class="col-xxl-3 col-md-6 d-flex">
+                                <button type="button" class="btn btn-primary waves-effect waves-light align-self-end"  onclick="getRoomWiseReportList();">View</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered table-nowrap align-middle mb-0" id="room_wise_report_table">
                             <thead class="table-light">
                                 <tr>
-                                    <th>Serial</th>
-                                    <th>From Date</th>
-                                    <th>To Date</th>
-                                    <th>Guest</th>
-                                    <th>Rooms</th>
-                                    <th>Price</th>
-                                    <th>Check In Time</th>
-                                    <th>Check Out Time</th>
-                                    <th>Action</th>
+                                    <th>Room Number</th>
+                                    <th>Night Count</th>
+                                    <th>Booked</th>
+                                    <th>Maintainance</th>
+                                    <th>Total Fare</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -73,10 +79,10 @@
 
 <script>
     $(document).ready(function() {
-        getAllCheckInList();
+        // getRoomWiseReportList();
     });
 
-    function getAllCheckInList(){
+    function getRoomWiseReportList(){
         var i = 1;
         $.ajaxSetup({
             headers: {
@@ -85,18 +91,19 @@
         });
 
 
-        var table= $('#roomCategoriesTable').DataTable( {
+        var table= $('#room_wise_report_table').DataTable( {
             "processing": true,
             "lengthMenu": [ [5, 10, 25, 50, -1], [5, 10, 25, 50, "All"] ],
             "pageLength": 10,
             "serverSide": true,
             "destroy" :true,
             "ajax": {
-                "url": './check-in',
+                "url": './room-wise-report',
                 "type": 'POST',
-                // "data": function ( d ) {
-                //     d.current_semester = $('#current_semester').val();
-                // },
+                "data": function ( d ) {
+                    d.from_date = $('#from_date').val();
+                    d.to_date = $('#to_date').val();
+                },
             },
             "columns": [
                 { "data": "0" },

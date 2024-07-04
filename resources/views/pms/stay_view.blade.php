@@ -9,11 +9,11 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-transparent">
-                        <h4 class="mb-sm-0">Room Categories List</h4>
+                        <h4 class="mb-sm-0">Stay View List</h4>
 
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Room Categories</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Stay View</a></li>
                             </ol>
                         </div>
 
@@ -21,20 +21,6 @@
                 </div>
             </div>
         </div>
-
-        <?php
-            $check_in_guest = checkButtonAccess('admin/check-in/{id}');
-        ?>
-        
-        @if(checkButtonAccess('admin/room-category-rent/add'))
-        <div class="text-end">
-            <a href="{{URL::to('admin/room-category/add')}}" class="btn btn-success btn-border">
-                <i class="bx bx-add-to-queue"></i>&nbsp
-                Add Room Category
-            </a>
-        </div>
-        <br>
-        @endif
 
         @include('layout.message')
 
@@ -45,15 +31,10 @@
                         <table class="table table-bordered table-nowrap align-middle mb-0" id="roomCategoriesTable">
                             <thead class="table-light">
                                 <tr>
-                                    <th>Serial</th>
-                                    <th>From Date</th>
-                                    <th>To Date</th>
-                                    <th>Guest</th>
                                     <th>Rooms</th>
-                                    <th>Price</th>
-                                    <th>Check In Time</th>
-                                    <th>Check Out Time</th>
-                                    <th>Action</th>
+                                    @for($i=0; $i<7; $i++)
+                                    <th>{{$days[$i]}}</th>
+                                    @endfor
                                 </tr>
                             </thead>
                             <tbody>
@@ -73,7 +54,7 @@
 
 <script>
     $(document).ready(function() {
-        getAllCheckInList();
+        // getAllCheckInList();
     });
 
     function getAllCheckInList(){
@@ -111,9 +92,6 @@
                     "data": "id",
                     "render": function ( data, type, full, meta ) {
                         var buttons = "";
-                        @if($check_in_guest)
-                            buttons += "<a href=\"check-in-complete/"+data+"\"><button class=\"btn btn-primary waves-effect waves-light\"><i class=\"fa fa-edit\"></i>&nbsp Check In</button></a>";
-                        @endif
                         return buttons;
                     }
                 }

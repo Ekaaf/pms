@@ -32,6 +32,7 @@ use App\Models\BiilingOtherInfo;
 use App\Models\RoomCategory;
 use App\Models\RoomCategoryRent;
 use App\Models\UserInfo;
+use App\Models\BookingDay;
 
 class MenuService{
 
@@ -369,7 +370,41 @@ class MenuService{
             }
         }
         Booking::insert($booking_arr);
-        // }
+        $this->saveBookingDays($booking_data, $billing_id, $booking_arr);
+    }
+
+
+    function saveBookingDays($booking_data, $billing_id, $booking_arr){
+        $room_category_id = array_column($booking_data['booking_data'], 'room_category_id');
+        $total_price = 0;
+        $room_categories = RoomCategory::whereIn('id', $room_category_id)->pluck('price', 'id');
+        $days = [];
+        $k = 0;
+
+        $rooms = [];
+        foreach($booking_arr as $arr){
+            $rooms[$arr['room_category_id']][] = $arr['room_id'];
+        }
+        
+        $dates = $this->getDates($booking_data['check_in'], $booking_data['check_out']);
+        foreach ($booking_data['booking_data'] as $key => $value){
+            $rent = RoomCategoryRent::where('room_category_id', $key)->whereIn('rent_date', $dates)->pluck('net_price', 'rent_date')->toArray();
+            for($i=0; $i<$value['no_of_rooms'];$i++){
+                foreach($dates as $date){
+                    $days[$k]['billing_id'] = $billing_id;
+                    $days[$k]['room_id'] = $rooms[$key][$i];
+                    $days[$k]['date'] = $date;
+                    $days[$k]['unit_price'] = $rent[$date] ?? $room_categories[$key];
+                    $days[$k]['discount'] = 0;
+                    $days[$k]['total_price'] = $rent[$date] ?? $room_categories[$key];
+                    $days[$k]['vat'] = 0;
+                    $days[$k]['created_by'] = Auth::user()->id;
+                    $days[$k]['created_at'] = date('Y-m-d H:i:s');
+                    $k++;
+                }
+            }
+        }
+        BookingDay::insert($days);
     }
 }
 ?>

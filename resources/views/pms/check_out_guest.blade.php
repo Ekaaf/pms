@@ -13,7 +13,7 @@
 
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Checn In Guest</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Checn Out Guest</a></li>
                             </ol>
                         </div>
 
@@ -66,6 +66,9 @@
                             <div class="col-sm-3">
                                 <b>To Date: </b> {{date_format(date_create($data[0]->to_date),"jS M, Y") }}
                             </div>
+                            <div class="col-sm-3">
+                                <b>Check In Time: </b> {{date_format(date_create($data[0]->checked_in_time),"jS M, Y H:i:s") }}
+                            </div>
                         </div>
                     </li>
                     <li class="list-group-item">
@@ -98,7 +101,7 @@
                         </div>
                         @if(checkButtonAccess('admin/users/add'))
                         <div class="text-end">
-                            <button type="button" class="btn btn-primary" onclick="confirmCheckIn();">Confirm Check In</button>
+                            <button type="button" class="btn btn-primary" onclick="confirmCheckOut();">Confirm Check Out</button>
                         </div>
                         @endif
                     </li>
@@ -116,7 +119,7 @@
     $(document).ready(function() {
     });
 
-    function confirmCheckIn(){
+    function confirmCheckOut(){
 
         $.ajaxSetup({
             headers: {
@@ -125,7 +128,7 @@
         });
 
         Swal.fire({
-            title: 'Are you sure want to confirm booking ?',
+            title: 'Are you sure want to confirm check out?',
             // text: "You won't be able to revert this!",
             icon: 'warning',
             showCancelButton: true,
@@ -134,7 +137,7 @@
             confirmButtonText: 'Yes, Confirm!'
         }).then((result) => {
             if (result.isConfirmed) {
-                var form = '<form method=\"post\" action=\"{{URL::to("admin/check-in-complete")}}/{{Request::segment(3)}}\"> @csrf<input type=\"text\" name=\"billing_id\" value=\"{{$data[0]->billing_id}}\"></form>';
+                var form = '<form method=\"post\" action=\"{{URL::to("admin/check-out-complete")}}/{{Request::segment(3)}}\"> @csrf<input type=\"text\" name=\"billing_id\" value=\"{{$data[0]->billing_id}}\"></form>';
                 console.log(form)
                 $('body').append(form);
                 $("form").submit();

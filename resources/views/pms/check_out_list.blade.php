@@ -9,11 +9,11 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-transparent">
-                        <h4 class="mb-sm-0">Room Categories List</h4>
+                        <h4 class="mb-sm-0">Check Out List</h4>
 
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Room Categories</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Check Out</a></li>
                             </ol>
                         </div>
 
@@ -23,18 +23,9 @@
         </div>
 
         <?php
-            $check_in_guest = checkButtonAccess('admin/check-in/{id}');
+            $check_out_guest = checkButtonAccess('admin/check-out/{id}');
         ?>
         
-        @if(checkButtonAccess('admin/room-category-rent/add'))
-        <div class="text-end">
-            <a href="{{URL::to('admin/room-category/add')}}" class="btn btn-success btn-border">
-                <i class="bx bx-add-to-queue"></i>&nbsp
-                Add Room Category
-            </a>
-        </div>
-        <br>
-        @endif
 
         @include('layout.message')
 
@@ -92,7 +83,7 @@
             "serverSide": true,
             "destroy" :true,
             "ajax": {
-                "url": './check-in',
+                "url": './check-out',
                 "type": 'POST',
                 // "data": function ( d ) {
                 //     d.current_semester = $('#current_semester').val();
@@ -111,8 +102,8 @@
                     "data": "id",
                     "render": function ( data, type, full, meta ) {
                         var buttons = "";
-                        @if($check_in_guest)
-                            buttons += "<a href=\"check-in-complete/"+data+"\"><button class=\"btn btn-primary waves-effect waves-light\"><i class=\"fa fa-edit\"></i>&nbsp Check In</button></a>";
+                        @if($check_out_guest)
+                            buttons += "<a href=\"check-out-complete/"+data+"\"><button class=\"btn btn-primary waves-effect waves-light\"><i class=\"fa fa-edit\"></i>&nbsp Check Out</button></a>";
                         @endif
                         return buttons;
                     }

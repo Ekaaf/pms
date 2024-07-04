@@ -9,6 +9,7 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\RoomCategoriesController;
 use App\Http\Controllers\RoomsController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -115,4 +116,26 @@ Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
 	Route::post('/check-in',[ReservationController::class, 'getAllCheckInList'])->name('Pms.CheckInList');
 	Route::get('/check-in-complete/{id}',[ReservationController::class, 'checkInView'])->name('Pms.CheckIn.View');
 	Route::post('/check-in-complete/{id}',[ReservationController::class, 'checkInComplete'])->name('Pms.CheckIn');
+
+
+	// check out 
+	Route::get('/check-out',[ReservationController::class, 'checkOutList'])->name('Pms.CheckOutList.View');
+	Route::post('/check-out',[ReservationController::class, 'getAllCheckOutList'])->name('Pms.CheckOutList');
+	Route::get('/check-out-complete/{id}',[ReservationController::class, 'checkOutView'])->name('Pms.CheckOut.View');
+	Route::post('/check-out-complete/{id}',[ReservationController::class, 'checkOutComplete'])->name('Pms.CheckOut');
+
+
+	// stay view
+	Route::get('/stay-view',[ReservationController::class, 'stayView'])->name('Pms.StayViewList.View');
+	Route::post('/stay-view',[ReservationController::class, 'getAllStayView'])->name('Pms.StayViewList');
+
+	// room view
+	Route::get('/room-view',[ReservationController::class, 'roomView'])->name('Pms.RoomViewList.View');
+	Route::post('/room-view',[ReservationController::class, 'getAllRoomView'])->name('Pms.RoomViewList');
+
+
+	Route::group(['prefix' => 'report'], function () {
+		Route::get('/room-wise-report',[ReportController::class, 'roomWiseReportView'])->name('Pms.RoomWiseReport.View');
+		Route::post('/room-wise-report',[ReportController::class, 'roomWiseReportList'])->name('Pms.RoomWiseReport');
+	});
 });
