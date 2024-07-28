@@ -1,0 +1,12 @@
+1) identity scan autofill
+2) reservation id show in check in table (done)
+3) reservation edit with no of people and childs (done)
+4) other guest info while check in (done)
+5) no check in without full payment. Only reservation head will be able to allow guest to check in without full payment with comments.
+6) booking cancel with partial payment room wise and cancellation without payment
+7) reservation will be confirmed after room is reserved irrespective of payment. When payment will be completed then booking will be confirmed. Full payment must
+be completed before 48 hours of booking date. But only Reservation head will be able to confirm booking without full payment.
+8) After check in only owner or superadmin will be able able to cancel any booking with or without refund.
+9) before check in floor in charge will confirm whether room is ready or not to check in
+10) webview app for androind and IOS
+11) room capacity with extra bed

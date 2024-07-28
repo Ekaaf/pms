@@ -15,6 +15,7 @@ use App\Service\MenuService;
 use App\SSP;
 use App\Models\Billing;
 use App\Models\RoomCategory;
+use App\Models\BiilingOtherInfo;
 
 class ReservationController extends Controller
 {
@@ -201,6 +202,8 @@ class ReservationController extends Controller
 
             $res['booked_rooms_text'] = $text;
 
+            $res['reservation_id'] = str_pad($res['id'], 5);
+
             $start++;
 
             $idx++;
@@ -212,7 +215,7 @@ class ReservationController extends Controller
 
     public function checkInView(Request $request, $billing_id)
     {   
-        $data = Billing::select('billing.id as billing_id', 'users.email', 'user_info.title', 'user_info.first_name', 'user_info.last_name', 'users.mobile', 'booking.from_date', 'booking.to_date', 'booking.people_adult', 'booking.people_child', 'booking.total_price', 'room_categories.category', 'rooms.room_number')->join('biiling_other_info', 'billing.id', 'biiling_other_info.billing_id')->join('booking', 'billing.id', 'booking.billing_id')->join('users', 'users.id', 'billing.user_id')->join('room_categories', 'room_categories.id', 'booking.room_category_id')->join('user_info', 'user_info.user_id', 'users.id')->join('rooms', 'rooms.id', 'booking.room_id')->where('billing.id', $billing_id)->get();
+        $data = Billing::select('billing.id as billing_id', 'booking.id as booking_id', 'users.email', 'user_info.title', 'user_info.first_name', 'user_info.last_name', 'users.mobile', 'booking.from_date', 'booking.to_date', 'booking.people_adult', 'booking.people_child', 'booking.total_price', 'room_categories.category', 'room_categories.people_adult  as max_adult', 'room_categories.people_child as max_child', 'rooms.room_number')->join('booking', 'billing.id', 'booking.billing_id')->join('users', 'users.id', 'billing.user_id')->join('room_categories', 'room_categories.id', 'booking.room_category_id')->join('user_info', 'user_info.user_id', 'users.id')->join('rooms', 'rooms.id', 'booking.room_id')->where('billing.id', $billing_id)->get();
 
         // dd($data);
         return view('pms.check_in_guest')->with('data',$data);
@@ -220,16 +223,40 @@ class ReservationController extends Controller
 
 
     public function checkInComplete(Request $request, $billing_id)
-    {
+    {   
         if($request->billing_id == $billing_id){
             $billing = Billing::find($billing_id);
             if($billing->checked_in == 1){
                 return redirect()->back()->with('error', "Guest Already Checked In")->withInput();
             }
             else{
-                $billing->checked_in = 1;
-                $billing->checked_in_time = date('Y-m-d H:i:s');
-                $billing->save();
+
+                try {
+                    DB::beginTransaction();
+                    $billing->checked_in = 1;
+                    $billing->checked_in_time = date('Y-m-d H:i:s');
+                    $billing->save();
+
+                    $billing_other_info = [];
+                    $count = count($request->identity);
+                    for($i=0;$i<$count;$i++){
+                        $billing_other_info[$i]['billing_id'] = $billing_id;
+                        $billing_other_info[$i]['identity'] = $request->identity[$i];
+                        $billing_other_info[$i]['identity_number'] = $request->identity_number[$i];
+                        $billing_other_info[$i]['expire_date'] = $request->expire_date[$i];
+                        $billing_other_info[$i]['dob'] = $request->dob[$i];
+                        $billing_other_info[$i]['nationality'] = 'Bangladeshi';
+                        $billing_other_info[$i]['created_by'] = Auth::user()->id;
+                        $billing_other_info[$i]['created_at'] = date('Y-m-d H:i:s');;
+                    }
+                    BiilingOtherInfo::insert($billing_other_info);
+                    DB::commit();
+                } catch (\Exception $e) {
+                    dd($e);
+                    DB::rollback();
+                    return redirect()->back()->with('error', "Couldn't save!")->withInput();
+                }
+                
                 echo "Checked In Successful";
             }
         }
@@ -411,5 +438,42 @@ class ReservationController extends Controller
         }
         // dd($data);
         return view('pms.room_view')->with('data',$data);
+    }
+
+
+    public function changeNoOfPeople(Request $request){
+        $response = [];
+        $booking_id = $request->booking_id;
+        $adult = $request->adult;
+        $child = $request->child;
+
+        $validator = \Validator::make($request->all(),
+            [
+                'booking_id' => 'required|numeric',
+                'adult' => 'required|numeric',
+                'child' => 'required|numeric',
+            ]
+        );
+        if ($validator->fails()) {
+            $response['status'] = 0;
+            $response['message'] = "Invalid data";
+        }
+        else{
+            $booking = Booking::find($booking_id);
+            $room_category = RoomCategory::find($booking->room_category_id);
+            if($adult > $room_category->people_adult || $child > $room_category->people_child){
+                $response['status'] = 0;
+                $response['message'] = "Invalid number of guest";
+            }
+            else{
+                $booking->people_adult = $adult;
+                $booking->people_child = $child;
+                $booking->save();
+                $response['status'] = 1;
+                $response['message'] = "Number of guest updated";
+                $response['data'] = $booking;
+            }
+        }
+        return response()->json($response);
     }
 }

@@ -7,6 +7,7 @@ use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\SSP;
 
 class ReportController extends Controller
 {
@@ -16,27 +17,20 @@ class ReportController extends Controller
     }
 
     public function roomWiseReportList(Request $request){
-        $table = "(SELECT billing.id, billing.final_price, booking.from_date, booking.to_date,array_to_json(array_agg(row(room_categories.category, booking.room_category_id)))   
-                    as booked_rooms, users.email, billing.checked_in_time,  billing.checked_out_time FROM billing inner join users on billing.user_id = users.id inner join user_info on users.id = user_info.user_id  inner join booking on billing.id = booking.billing_id inner join room_categories on room_categories.id = booking.room_category_id where billing.status = 1 AND billing.checked_in = 1 AND billing.checked_out = 0 group By billing.id, booking.from_date, booking.to_date, users.email) testtable";
+        $table = "(select rooms.id, rooms.room_category_id, booked, rooms.room_number, total_price from rooms left join (select booking_days.room_id, sum(booking_days.total_price) as total_price, count(booking_days.id) as booked from booking_days where 
+                date between '".$request->from_date."' and '".$request->to_date."' group by booking_days.room_id) book_days on rooms.id = book_days.room_id) 
+            testtable";
         // dd($table);
         $primaryKey = 'id';
         $columns = array(
 
             array( 'db' => 'id', 'dt' => 'id' ),
 
-            array( 'db' => 'from_date', 'dt' => 'from_date' ),
+            array( 'db' => 'room_number', 'dt' => 'room_number' ),
 
-            array( 'db' => 'to_date', 'dt' => 'to_date' ),
+            array( 'db' => 'booked', 'dt' => 'booked' ),
 
-            array( 'db' => 'email', 'dt' => 'email' ),
-
-            array( 'db' => 'booked_rooms', 'dt' => 'booked_rooms' ),
-            
-            array( 'db' => 'final_price', 'dt' => 'final_price' ),
-
-            array( 'db' => 'checked_in_time', 'dt' => 'check_in_time' ),
-
-            array( 'db' => 'checked_out_time', 'dt' => 'check_out_time' ),
+            array( 'db' => 'total_price', 'dt' => 'total_price' )
         );
 
         $database = config('database.connections.pgsql');
@@ -57,6 +51,10 @@ class ReportController extends Controller
         foreach($result['data'] as &$res){
 
             $res[0]=(string)$start;
+
+            $res['night_count'] = 5;
+
+            $res['maintenance'] = 0;
 
             $start++;
 

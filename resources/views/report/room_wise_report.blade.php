@@ -55,6 +55,7 @@
                         <table class="table table-bordered table-nowrap align-middle mb-0" id="room_wise_report_table">
                             <thead class="table-light">
                                 <tr>
+                                    <th>Serial</th>
                                     <th>Room Number</th>
                                     <th>Night Count</th>
                                     <th>Booked</th>
@@ -107,23 +108,24 @@
             },
             "columns": [
                 { "data": "0" },
-                { "data": "from_date" },
-                { "data": "to_date" },
-                { "data": "email" },
-                { "data": "booked_rooms_text" },
-                { "data": "final_price" },
-                { "data": "check_in_time" },
-                { "data": "check_out_time" },
-                {
-                    "data": "id",
-                    "render": function ( data, type, full, meta ) {
-                        var buttons = "";
-                        @if($check_in_guest)
-                            buttons += "<a href=\"check-in-complete/"+data+"\"><button class=\"btn btn-primary waves-effect waves-light\"><i class=\"fa fa-edit\"></i>&nbsp Check In</button></a>";
-                        @endif
-                        return buttons;
-                    }
-                }
+                { "data": "room_number" },
+                { "data": "night_count" },
+                { "data": "booked" },
+                { "data": "maintenance" },
+                { "data": "total_price" },
+                // { "data": "final_price" },
+                // { "data": "check_in_time" },
+                // { "data": "check_out_time" },
+                // {
+                //     "data": "id",
+                //     "render": function ( data, type, full, meta ) {
+                //         var buttons = "";
+                //         @if($check_in_guest)
+                //             buttons += "<a href=\"check-in-complete/"+data+"\"><button class=\"btn btn-primary waves-effect waves-light\"><i class=\"fa fa-edit\"></i>&nbsp Check In</button></a>";
+                //         @endif
+                //         return buttons;
+                //     }
+                // }
             ]
         });
     }

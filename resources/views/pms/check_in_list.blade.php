@@ -9,11 +9,11 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-transparent">
-                        <h4 class="mb-sm-0">Room Categories List</h4>
+                        <h4 class="mb-sm-0">Check In List</h4>
 
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Room Categories</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Check In List</a></li>
                             </ol>
                         </div>
 
@@ -46,6 +46,7 @@
                             <thead class="table-light">
                                 <tr>
                                     <th>Serial</th>
+                                    <th>Reservation ID</th>
                                     <th>From Date</th>
                                     <th>To Date</th>
                                     <th>Guest</th>
@@ -100,6 +101,7 @@
             },
             "columns": [
                 { "data": "0" },
+                { "data": "reservation_id" },
                 { "data": "from_date" },
                 { "data": "to_date" },
                 { "data": "email" },
